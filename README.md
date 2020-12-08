@@ -1,6 +1,6 @@
 # 데스크 프렌드
 
-<b>데스크 프렌드 UI 및 기술 시연 영상 링크</b> >>  (추가)
+<b>데스크 프렌드 UI 및 기술 시연 영상 링크</b> >>  https://youtu.be/YzsEaIvKwDc
 
 <b> 데스크 프렌드란?</b>
 
@@ -11,10 +11,13 @@
 
 <b>기술 블로그</b>
 
+-프로젝트에서 사용할 주요 기술에 대해서 알아보고, 간단한 실습 진행해보기 >>
+https://archiveeverythingnow.blogspot.com/2020/11/1-colab-opencv.html 
+
 -웹캠과 opencv 연결해보기 
 >>
 >>
->>
+
 
 -그 외 다른 기술 내용
 
