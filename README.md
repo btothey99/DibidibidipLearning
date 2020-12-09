@@ -11,15 +11,15 @@
 
 <b>기술 블로그</b>
 
--프로젝트에서 사용할 주요 기술에 대해서 알아보고, 간단한 실습 진행해보기 >>
+-프로젝트에서 사용할 주요 기술에 대해서 알아보고, 웹캠과 opencv 연결하는 실습 진행해보기 >>
 https://archiveeverythingnow.blogspot.com/2020/11/1-colab-opencv.html 
 
 -웹캠과 opencv 연결해보기 
->>
->>
+>> https://shlfmf.blogspot.com/2020/11/opencvgoogle-colab.html
 
+- 두 가지 방법으로 openpose 실행해보기, 웹캠과 opencv 연결해보기
+>> https://hayoung1214.blogspot.com/2020/12/openpose_5.html 
 
--그 외 다른 기술 내용
 
 <b>  구현 참고자료 </b>
 
