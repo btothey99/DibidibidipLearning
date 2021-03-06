@@ -1,0 +1,48 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background: #ffffff;
+    font-family: Dotum,'돋움',Helvetica,sans-serif;
+}
+
+header .pause{
+	display:flex;
+	justify-content:flex-end;
+}
+
+header .pause img {
+  margin: 20px;
+  width: 64px;
+  height: 64px;
+}
+
+.footer {
+  width:100%;
+  height:100px;
+  position:absolute;
+  bottom:0;
+  background: #82b8ad;
+  display:flex;
+  color: white;
+}
+.footer .left {
+    text-align: left;
+}
+.footer .right {
+    text-align: right;
+}
+.footer img {
+  margin: 20px;
+  width: 36px;
+  height: 36px;
+}
+
+.footer p1 {
+  margin: 20px 0px;
+  padding: 20px 0px;
+  color: #000000;
+}

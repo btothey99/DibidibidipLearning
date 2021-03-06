@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel='stylesheet' href='styforusermain.css'/>
+  <title>Desk Friend</title>
+</head>
+<body>
+  <!-- 일시정지 버튼 -->
+  <header>
+    <div class="pause">
+      <img src="pause.png" id="pause">
+    </div>
+  </header>
+
+  <!--웹캠 영상 -->
+  <video
+     width="704"
+     height="576"
+     autoplay
+     playsinline
+     muted
+     id="player"
+   ></video> -->    <!-- 이 video tag를 통해 webcam feed를 재생합니다. -->
+
+   <script type="text/javascript" src="./user_main.js"></script>
+
+
+
+
+  <!--하단 설정 메뉴바 -->
+  <div class="footer">
+    <div class="left">
+      <a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>
+  </div>
+    <div class="right">
+      <a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
+      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>
+    </div>
+  </div>
+  </body>
+</html>
