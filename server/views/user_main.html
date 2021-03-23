@@ -7,83 +7,79 @@
   <title>Desk Friend</title>
 </head>
 <body>
-  <!-- 일시정지 버튼 -->
+  
   <header>
     <div class="pause">
       <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">
     </div>
   </header>
-
+  </div>
   <video autoplay></video>
-    <script>
-        // get video dom element
+ 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+    // get video dom element
         const video = document.querySelector('video');
         
+        window.onload = function () {
+            if (window.Notification) {
+                Notification.requestPermission();
+                //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
+                
+            }
+        }
+
         // request access to webcam
         navigator.mediaDevices.getUserMedia({video: {width: 426, height: 240}}).then((stream) => video.srcObject = stream);
         
-        // returns a frame encoded in base64
         const getFrame = () => {
+        
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            const data = canvas.toDataURL('image/png');
-            return data;  //getFrame()안에 웹캠 이미지 받음
-        }
-
         
-        const WS_URL = location.origin.replace(/^http/, 'ws');
+            const data = canvas.toDataURL('image/jpeg');
+        
+            return data;
+        }
+        
+        
+
+        const WS_URL = 'ws://localhost:3000';
         const FPS = 3;
         const ws = new WebSocket(WS_URL);
         ws.onopen = () => {
             console.log(`Connected to ${WS_URL}`);
             setInterval(() => {
                 ws.send(getFrame());
-                
-                //document.write('<form action="/test" id = "smb_form" method="post" enctype="multipart/form-data"><input type="hidden"  name="image" value="'+ fn +'"></form>');
-                //document.getElementById("smb_form").submit();
-                //console.log("send frame")
-            }, 1000 / FPS);
+            }, 30000 / FPS);
         }
-    </script>
-    <form id ='gopage' action='/test' method='post' enctype="multipart/form-data" onsubmit="getFrame">
-        
-      <value=getFrame() name='image' >  
-      <!--<input type="submit" value="전송">       -->
-  </form>
 
-  <script> 
-    document.getElementById('gopage').submit(); 
-</script> 
-
-<!--
- <script type="text/javascript" >
-
-    // video tag의 DOM element를 player로 지정합니다.
-    var player = document.getElementById("player");
-    var stopButton = document.getElementById("pause");
-    // 웹캠 사용권한이 승인되는 경우 스트리밍 영상을 player의 재생대상으로 지정
-    var handleSuccess = function (stream) {
-      player.srcObject = stream;
-    };
-
-    navigator.mediaDevices.getUserMedia({ video: true }).then(handleSuccess);
-    // 현재 사용중인 브라우저 객체(navigator)의 mediaDevices 인터페이스를
-    // 이용하여 사용자의 미디어 입력장치 사용권한을 받습니다.
-
-    stopButton.addEventListener("click", function () {
-      stream = player.srcObject;
-      tracks = stream.getTracks();
-      tracks.forEach(function (track) {
-        track.pause();
-      });
-      player.srcObject = null;
-    });
-  </script>
--->
+        ws.onmessage= function(event){
+          console.log("server message: ",event.data);
+          let recData = JSON.parse(event.data);
+          console.log("flaskdata message: ",recData.text[0]);
+          if (Notification.permission !== 'granted') {
+                alert('notification is disabled');
+            }
+            else {
+                var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: recData.text[0], //알람 내용
+                });
  
+                notification.onclick = function () {
+                    window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                };
+            }
+        }
 
+       
+        </script>
+        
+   
+    
 
 
 
