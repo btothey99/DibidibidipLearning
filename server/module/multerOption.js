@@ -3,12 +3,12 @@ const multer = require('multer')
 const uuid4 = require('uuid4')
 const uuid = () => {
     const tokens = uuid4().split('-')
-    return tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4]
+    return 1111 //tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4]
 }
 const multerOption = multer({
     storage: multer.diskStorage({
       destination : function(req, file, cb){    
-        cb(null, 'userUpload/');
+        cb(null, 'userUpload/'); //call back함수
       },
       filename : function(req, file, cb){
         var mimeType;
