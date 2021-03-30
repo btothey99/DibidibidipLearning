@@ -59,20 +59,49 @@
         ws.onmessage= function(event){
           console.log("server message: ",event.data);
           let recData = JSON.parse(event.data);
-          console.log("flaskdata message: ",recData.text[0]);
+          console.log("flag message: ",recData.flag);
+          var data=[];
+
+
           if (Notification.permission !== 'granted') {
                 alert('notification is disabled');
-            }
-            else {
-                var notification = new Notification("[DESK FRIENDS]", { //알람 제목
-                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                    body: recData.text[0], //알람 내용
-                });
+          }
+          else {
+            if(recData.flag ==1){//모니터에 다 안담긴 경우
+              var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+              icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+              body: '모니터에 어깨와 얼굴이 다 나오도록 자세를 바르게 해주세요', //알람 내용
+            });
  
-                notification.onclick = function () {
-                    window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
-                };
+              notification.onclick = function () {
+                window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+              };
             }
+
+            else if(recData.flag ==2){  //자세가 안좋은 경우
+              
+              var array=[];
+              
+              for(var i =0; i<recData.text.length ; i++){
+                array.push(recData.text[i])
+                
+              
+              }
+            
+              data=array
+
+              var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                body: data + "이(가) 바르지 않습니다 자세를 바르게 해주세요", //알람 내용
+              });
+ 
+              notification.onclick = function () {
+              window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+             };
+            }
+            
+           
+          }
         }
 
        
