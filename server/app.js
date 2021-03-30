@@ -14,6 +14,7 @@ var md5File = require('md5-file');
 
 var url = require('url');
 var axiosRequest = require('./module/axiosRequest.js');
+var preaxiosRequest = require('./module/preaxiosRequest.js');
 var multerOption = require('./module/multerOption.js');
 
 
@@ -44,7 +45,7 @@ const wsServer = new WebSocket.Server({ server: httpServer });
 let connectedClients = [];
 var snapshotHour = -1;	// start auto-capping the history feed. 
 var imageName = "image.jpg";
-
+var preimageName = "preimage.jpg";
 
 
 
@@ -68,11 +69,12 @@ wsServer.on('connection',  (ws, req) => {
 
         if (ws.readyState === ws.OPEN) { // check if it is still connected
             ws.send("연결됐다1");
-            
+            //console.log(message);  data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMC
             
             var BASE64_MARKER = ';base64,';
             var base64Index = message.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-            var base64 = message.substring(base64Index);
+            var base64 = message.substring(base64Index);    ///9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMC
+            
             var buffer= new Buffer.from(base64, 'base64'); // atob(base64) in window scope
 
             fs.writeFileSync(imageName,buffer, function(e) {
@@ -145,8 +147,8 @@ app.set('views',  './views');
 app.set('view engine','ejs');
 app.engine('html', require('ejs').renderFile);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : false}));
+app.use(express.json());
+app.use(express.urlencoded({extended : false}));
 
 app.get('/', function (req, res) {
     res.send('ROOT');
@@ -261,7 +263,12 @@ app.get('/user_main', function (req, res) {
 // });
 
 
+app.get('/pre_user_main', function (req, res) {
+    
+    res.render('pre_user_main.html');
+    var postureresult=[]
 
+});
 
 
 //알람을 몇 시간 주기로 할 건지 설정하는 화면
@@ -319,12 +326,12 @@ app.post('/test', multerOption.single('image'),  async (req, res) => {
         //var flaskdata = responseData["text"]
         var flaskdata={
             hash : hash,
-            text: responseData["text"]
+            text: responseData["text"],
+            flag : responseData["flag"]
         }
-        Image.create(flaskdata)
+        //Image.create(flaskdata)
         res.json(flaskdata)
-            
-        
+                
         
     }else{
     res.json({
@@ -336,6 +343,103 @@ app.post('/test', multerOption.single('image'),  async (req, res) => {
     console.log("success flaskdata imageeeeeee")
 
 });
+
+
+
+app.post('/makefile',   async (req, res) => {
+    console.log("mmmmmmmmmmmmmmmm");
+    //console.log(message);
+    var imgmessage = req.body.id;
+    //console.log(imgmessage);
+
+
+    var BASE64_MARKER = ';base64,';
+    var base64Index = imgmessage.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    var base64 = imgmessage.substring(base64Index);    ///9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMC
+    
+    var buffer= new Buffer.from(base64, 'base64'); // atob(base64) in window scope
+
+
+
+    fs.writeFileSync(preimageName ,buffer, function(e) {
+        if(e) {
+            //sys.debug(e);
+        } else {
+            //sys.debug("file written, starting upload...");
+            console.log("convertDataURIToBinary(req)")
+        }
+    });
+    const filePath = __dirname + '\\preimage.jpg';
+    var newFile = fs.createReadStream(filePath);
+    
+    //console.log(newFile)
+    // personally I'd function out the inner body here and just call 
+    // to the function and pass in the newFile
+    const formData = new FormData();
+    formData.append('image', newFile,newFile.name);
+   
+    
+    try{
+        var test_result =  await axios.post('http://localhost:3000/pre_test', formData, {
+            // You need to use `getHeaders()` in Node.js because Axios doesn't
+            // automatically set the multipart form boundary in Node.
+            headers: formData.getHeaders()
+            
+        });
+            
+        //res.end();  //클라이언트에게 응답을 전송한다
+        
+
+        console.log("post image to pre_test")
+        console.log(test_result)
+        console.log(test_result.status)
+        console.log(test_result.data)
+        
+        if(test_result.status == 200){
+            test_result_responsedata = test_result.data
+            console.log("ssssssssssss")
+            console.log(test_result_responsedata)
+            
+        }
+        res.json(test_result.data)       
+    }catch(e){console.log("[ERROR|success pass pre_test error] : ",e)}
+});
+
+
+app.post('/pre_test', multerOption.single('image'),  async (req, res) => {
+    //console.log(req.file); 
+    fileName = req.file['filename']
+    console.log('////////////////////////////')
+    hash = md5File.sync('userUpload/'+fileName)
+    //console.log(fileName)
+     
+    
+    try{
+      var preaxiosResponse = await preaxiosRequest('userUpload/'+fileName)
+      //console.log("[axiosResponse] : ", axiosResponse)
+      if(preaxiosResponse.status == 200){
+        preresponseData = preaxiosResponse.data
+        //var flaskdata = responseData["text"]
+        var flaskdata={
+            hash : hash,
+            text: preresponseData["text"],
+            flag : preresponseData["flag"]
+        }
+        //Image.create(flaskdata)
+        res.json(flaskdata)
+                
+        
+    }else{
+    res.json({
+        hash:          hash     
+        })  
+    }
+    }catch(e){console.log("[ERROR|preaxiosRequest] : ",e)}
+    console.log(flaskdata)
+    console.log("success flaskdata imageeeeeee")
+
+});
+
 
 
 //샘플 코드
