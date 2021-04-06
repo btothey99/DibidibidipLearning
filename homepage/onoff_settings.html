@@ -3,35 +3,49 @@
 <head>
   <meta charset='utf-8'/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel='stylesheet' href='styforonoff.css'/>
+  <link rel='stylesheet' href='./css/styforonoff.css'/>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
   <title>Desk Friend</title>
 </head>
 <body>
-  <div class="onoff-wrap">
-    <div class="onoff-list">
-      <p3>스트레칭 알람</p3>
-    </div>
+  <div id="onoff-wrap">
     <div class="onoff-list">
       <p3>자세교정 알람</p3>
+      <label class="switch">
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
     </div>
     <div class="onoff-list">
       <p3>웹캠 알람</p3>
+      <label class="switch">
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
     </div>
     <div class="onoff-list">
       <p3>로그아웃</p3>
     </div>
     <div>
-      <h4>닫기</h4>
+      <a href="user_main.html"><button>닫기</button></a>
   </div>
 </div>
+
+<script>
+  var check = $("input[type='checkbox']");
+  check.click(function(){
+  	$("p").toggle();
+  });
+</script>
+
 <!--하단 설정 메뉴바 -->
 <div class="footer">
   <div class="left">
-    <a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>
+    <a href="alarm_settings.html" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+    <a href="callender.html" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
 </div>
   <div class="right">
-    <a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
-    <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>
+    <a href="onoff_settings.html" title="설정"><img src="./img/settings.png" id="settings"></a>
   </div>
 </div>
 
