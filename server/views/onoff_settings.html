@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='./css/styforonoff.css'/>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <title>Desk Friend</title>
+</head>
+
+
+<body>
+  <div id="onoff-wrap">
+    <div class="onoff-list">
+      <p3>자세교정 알람</p3>
+      <label class="switch">
+      <input type="checkbox" id="posture" toggle="on" >
+      <span class="slider round"></span>
+    </label>
+    </div>
+    
+    <div class="onoff-list">
+      <p3>웹캠 알람</p3>
+      <label class="switch">
+      <input type="checkbox" id="webcam" >
+      <span class="slider round"></span>
+    </label>
+    </div>
+
+    <div class="onoff-list">
+      <p3>로그아웃</p3>
+    </div>
+    
+    <div>
+      <a href="/user_main"><button>닫기</button></a>
+  </div>
+</div>
+
+<script>
+
+window.onload = function () {
+    
+    if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
+      localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
+    }
+    
+    else{
+      var state = localStorage.getItem('posturealarm')
+      if (state=="true"){
+        $("input[id=posture]:checkbox").attr('checked', 'checked');
+      }
+    }
+
+    
+    if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
+      localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
+    }
+    
+    else{
+      var state = localStorage.getItem('webcamalarm')
+      if (state=="true"){
+        $("input[id=webcam]:checkbox").attr('checked', 'checked');
+      }
+    }
+  
+        
+  }
+  
+
+  var check = $("input[id='posture']");
+  check.click(function(){
+  	$("p").toggle();
+    
+    //console.log(this.checked)
+    if (this.checked ==true){
+      localStorage.setItem('posturealarm',"true")
+      console.log(localStorage.getItem('posturealarm'))//확인용
+    }
+    else{
+      localStorage.setItem('posturealarm',"false")
+      console.log(localStorage.getItem('posturealarm'))
+    }
+  });
+
+
+  var check2 = $("input[id='webcam']");
+  check2.click(function(){
+  	$("p").toggle();
+    
+    if (this.checked ==true){
+      localStorage.setItem('webcamalarm',"true")
+      console.log(localStorage.getItem('webcamalarm'))//확인용
+    }
+    else{
+      localStorage.setItem('webcamalarm',"false")
+      console.log(localStorage.getItem('webcamalarm'))
+    }
+  });
+
+  
+</script>
+
+  <!--하단 설정 메뉴바 -->
+  <div class="footer">
+    <div class="left">
+      <!--<a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>-->
+      <button type="button" class="navyBtn" onClick="location.href='/alarm_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/alarm.png" id="settings"></button><!--이런식으로 바꾸는거 보연이에게 상의-->
+    </div>
+    <div class="right">
+      <!--<a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
+      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>-->
+    
+      <button type="button" class="navyBtn" onClick="location.href='/callender'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/user-icon.png" id="settings"></button>
+      <button type="button" class="navyBtn" onClick="location.href='/onoff_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/settings.png" id="settings"></button>
+    </div>
+  </div>
+  </body>
+  
+  
+
+  
+  <style>
+  html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background: #f5f6f7;
+    font-family: Dotum,'돋움',Helvetica,sans-serif;
+}
+
+a {
+	text-decoration: none;
+	color: #4e4e4e;
+}
+
+#onoff-wrap {
+  margin: 20px auto;
+  max-width: 350px;
+  padding: 10px;
+  background: #bdc9a6;
+  text-align: center;
+}
+
+#onoff-wrap .onoff-list {
+  margin: 30px 10px 40px;
+}
+
+button{
+  width : 120px;
+	height :48px;
+  bottom : 48px;
+	font-size: 18px;
+	background: #82b8ad;
+	color: white;
+	border: solid 1px var(--dskfrd-color2);
+}
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  vertical-align:middle;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+p {
+	margin:0px;
+  display:inline-block;
+	font-size:15px;
+	font-weight:bold;
+}
+
+
+.footer {
+  width:100%;
+  height:100px;
+  position:absolute;
+  bottom:0;
+  background: #82b8ad;
+  display:flex;
+  color: white;
+}
+.footer .left {
+    text-align: left;
+}
+.footer .right {
+    text-align: right;
+}
+.footer img {
+  margin: 30px 0px 0px 20px;
+  width: 36px;
+  height: 36px;
+}
+
+.footer p1 {
+  margin: 20px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
+  color: #000000;
+}
+  </style>
+</html>
