@@ -10,15 +10,22 @@
   
   <header>
     <div class="pause">
-      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">
+      <h2 id="sentence"></h2>
+      <!--<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">-->
+      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png" id="play">
+      
     </div>
   </header>
   </div>
   <video autoplay></video>
- 
+  
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-    // get video dom element
+        
+       
+
+        document.getElementById('play').addEventListener('click', onClick); // 이벤트 연결
+        // get video dom element
         const video = document.querySelector('video');
         
         window.onload = function () {
@@ -27,10 +34,19 @@
                 //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
                 
             }
+            if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
+            }
+            if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
+            }
+            console.log(localStorage.getItem('posturealarm'))//확인용
+      
         }
 
+ 
         // request access to webcam
-        navigator.mediaDevices.getUserMedia({video: {width: 426, height: 240}}).then((stream) => video.srcObject = stream);
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
         
         const getFrame = () => {
         
@@ -44,65 +60,98 @@
             return data;
         }
         
-        
-
+        var flag = 0;//처음 시작은 일시정지 상태
         const WS_URL = 'ws://localhost:3000';
         const FPS = 3;
-        const ws = new WebSocket(WS_URL);
-        ws.onopen = () => {
-            console.log(`Connected to ${WS_URL}`);
-            setInterval(() => {
-                ws.send(getFrame());
-            }, 30000 / FPS);
-        }
+        var ws;
 
-        ws.onmessage= function(event){
-          console.log("server message: ",event.data);
-          let recData = JSON.parse(event.data);
-          console.log("flag message: ",recData.flag);
-          var data=[];
+        function onClick() {
+         
+          if(flag==0){//flag가 0인 상태에서 버튼을 클릭했다면
+            alert('서비스 사용을 시작합니다.');
+            document.getElementById("sentence").innerText = '';
+            document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png";
+            flag=1; //재생상태로 변환
+            
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+        
+            
+            
 
-
-          if (Notification.permission !== 'granted') {
-                alert('notification is disabled');
-          }
-          else {
-            if(recData.flag ==1){//모니터에 다 안담긴 경우
-              var notification = new Notification("[DESK FRIENDS]", { //알람 제목
-              icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-              body: '모니터에 어깨와 얼굴이 다 나오도록 자세를 바르게 해주세요', //알람 내용
-            });
- 
-              notification.onclick = function () {
-                window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
-              };
+            ws =  new WebSocket(WS_URL);
+            ws.onopen = () => {
+                console.log(`Connected to ${WS_URL}`);
+                setInterval(() => {
+                    ws.send(getFrame());
+                }, 30000 / FPS);
             }
 
-            else if(recData.flag ==2){  //자세가 안좋은 경우
-              
-              var array=[];
-              
-              for(var i =0; i<recData.text.length ; i++){
-                array.push(recData.text[i])
-                
-              
+            ws.onmessage= function(event){
+              console.log("server message: ",event.data);
+              let recData = JSON.parse(event.data);
+              console.log("flag message: ",recData.flag);
+              var data=[];
+
+
+              if (Notification.permission !== 'granted') {
+                    alert('notification is disabled');
               }
-            
-              data=array
+              else {
+                var state = localStorage.getItem('posturealarm')
+                if (state=="true"){
+                  if(recData.flag ==1){//모니터에 다 안담긴 경우
+                  var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                  icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                  body: '모니터에 어깨와 얼굴이 다 나오도록 자세를 바르게 해주세요', //알람 내용
+                });
+    
+                  notification.onclick = function () {
+                    window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                }
 
-              var notification = new Notification("[DESK FRIENDS]", { //알람 제목
-                icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: data + "이(가) 바르지 않습니다 자세를 바르게 해주세요", //알람 내용
-              });
- 
-              notification.onclick = function () {
-              window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
-             };
-            }
-            
+                else if(recData.flag ==2){  //자세가 안좋은 경우
+                  
+                  var array=[];
+                  
+                  for(var i =0; i<recData.text.length ; i++){
+                    array.push(recData.text[i])
+                    
+                  
+                  }
+                
+                  data=array
+
+                  var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: data + "이(가) 바르지 않습니다 자세를 바르게 해주세요", //알람 내용
+                  });
+    
+                  notification.onclick = function () {
+                  window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                };
+                }
+                }
+              
+                
            
+               }
+             }
           }
+          
+          else if(flag==1){//flag가 1인 상태에서 버튼을 클릭했다면
+            alert('서비스 사용이 일시 중지 되었습니다.');
+            document.getElementById("sentence").innerText = '재생 버튼을 클릭해 서비스를 재개해주세요';
+            document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png";
+            flag=0; //일시정지 변환
+            ws.close();
+            video.pause();
+            video.src = "";//웹캠꺼진거 표시할 수 있는 이미지면 좋겠음
+  	        video.srcObject.getTracks()[0].stop();
+          }
+          
         }
+        
 
        
         </script>
