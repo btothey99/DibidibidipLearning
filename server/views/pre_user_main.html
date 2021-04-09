@@ -34,6 +34,7 @@
                 //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
                 
             }
+            
         }
 
         var btnSave = document.getElementById('btnSave');
@@ -97,7 +98,7 @@
               else {
                   var notification = new Notification("[DESK FRIENDS]", { //알람 제목
                       icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                      body: "자세가 등록되어 서비스를 시작합니다" //알람 내용
+                      body: "올바른 자세가 등록되어 서비스 페이지로 이동합니다" //알람 내용
                   });
   
                   notification.onclick = function () {
