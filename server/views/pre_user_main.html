@@ -32,7 +32,11 @@
             if (window.Notification) {
                 Notification.requestPermission();
                 //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
-                
+                //나중엔 로그아웃할때 remove시키기
+                localStorage.removeItem("flag");
+                localStorage.removeItem("startflag");
+                localStorage.removeItem("justoneflag");
+                localStorage.removeItem("justoneflag2");
             }
             
         }
