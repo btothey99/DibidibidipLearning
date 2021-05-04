@@ -22,7 +22,7 @@
                 <div>
                     <h3 class="join_title"><label for="id">아이디</label></h3>
                     <span class="box int_id">
-                        <input type="text" name="id" class="int" maxlength="20" placeholder='아이디'>
+                        <input type="text" id="id" name="id" class="int" maxlength="20" placeholder='아이디'>
                     </span>
                     <span class="error_next_box"></span>
                 </div>
@@ -31,7 +31,7 @@
                 <div>
                     <h3 class="join_title"><label for="pswd1">비밀번호</label></h3>
                     <span class="box int_pass">
-                        <input type="text" name="pswd1" class="int" maxlength="20" placeholder='비밀번호'>
+                        <input type="text" id="pswd1" name="pswd1"  maxlength="20" placeholder='비밀번호'>
                         <span id="alertTxt">사용불가</span>
                     </span>
                     <span class="error_next_box"></span>
@@ -41,7 +41,7 @@
                 <div>
                     <h3 class="join_title"><label for="pswd2">비밀번호 재확인</label></h3>
                     <span class="box int_pass_check">
-                        <input type="text" name="pswd2" class="int" maxlength="20">
+                        <input type="text" id="pswd2" name="pswd2" class="int" maxlength="20">
                         <!--<img src="m_icon_check_disable.png" id="pswd2_img1" class="pswdImg"> -->
                     </span>
                     <span class="error_next_box"></span>
@@ -51,7 +51,7 @@
                 <div>
                     <h3 class="join_title"><label for="name">이름</label></h3>
                     <span class="box int_name">
-                        <input type="text" name="name" class="int" maxlength="20">
+                        <input type="text" id="name" name="name" class="int" maxlength="20">
                     </span>
                     <span class="error_next_box"></span>
                 </div>
@@ -64,14 +64,14 @@
                         <!-- BIRTH_YY -->
                         <div id="bir_yy">
                             <span class="box">
-                                <input type="text" name="yy" class="int" maxlength="4" placeholder="년(4자)">
+                                <input type="text" id="yy" name="yy" class="int" maxlength="4" placeholder="년(4자)">
                             </span>
                         </div>
 
                         <!-- BIRTH_MM -->
                         <div id="bir_mm">
                             <span class="box">
-                                <select name="mm" class="sel">
+                                <select id="mm" name="mm" class="sel">
                                     <option>월</option>
                                     <option value="01">1</option>
                                     <option value="02">2</option>
@@ -92,7 +92,7 @@
                         <!-- BIRTH_DD -->
                         <div id="bir_dd">
                             <span class="box">
-                                <input type="text" name="dd" class="int" maxlength="2" placeholder="일">
+                                <input type="text" id="dd" name="dd" class="int" maxlength="2" placeholder="일">
                             </span>
                         </div>
 
@@ -104,7 +104,7 @@
                 <div>
                     <h3 class="join_title"><label for="gender">성별</label></h3>
                     <span class="box gender_code">
-                        <select name="gender" class="sel">
+                        <select id="gender" name="gender" class="sel">
                             <option>성별</option>
                             <option value="M">남자</option>
                             <option value="F">여자</option>
@@ -130,7 +130,8 @@
         </div>
         <!-- wrapper -->
     </form>
-    <script src="main.js"></script>
+    <script type='text/javascript'src='js/register.js'></script>
+
 
 
 <style>
