@@ -27,14 +27,22 @@ var FileReader = require('FileReader');
 var querystring = require('querystring');
 //const httpServer = http.createServer(app);
 //var https = require('https').createServer({});
+var mysql = require('mysql');
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+var crypto = require('crypto');
+var dbOptions = db_config;
+var cookieParser=require('cookie-parser');
+
+
 
 const mongoose = require('mongoose')
 const schema = require('./mongoImage.js')
 
-const Image = mongoose.model('Image', schema.imageSchema);
+//const Image = mongoose.model('Image', schema.imageSchema);
 
 var sanitizeHtml = require('sanitize-html');
-var template = require('./module/template.js');
+
 const { response } = require('express');
 
 const PORT = process.env.PORT || 3000;
@@ -143,39 +151,108 @@ app.get('/user_main', (req, res) => res.sendFile(path.resolve(__dirname, './view
 
 db_config.connect(conn);
 
-app.set('views',  './views');
-app.set('view engine','ejs');
-app.engine('html', require('ejs').renderFile);
+app.engine('.html', require('ejs').__express);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'html');
 
-app.use(express.json());
-app.use(express.urlencoded({extended : false}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : false}));
+// app.use(session({
+//     secret:'!@#$%^&*',
+//     store: new MySQLStore(dbOptions),
+//     resave: false,
+//     saveUninitialized:false
+// }));
+app.use(cookieParser('fvnslfjslkfjslfjslf'));
+
+
 
 app.get('/', function (req, res) {
-    res.send('ROOT');
+    // if(!req.session.name)
+    //     res.redirect('/main');
+    // else   
+        res.redirect('/pre_user_main');
+
 });
 
 //로그인 페이지 (앱을 키면 가장 먼저 보이는 화면)
 //로그인 GET
 app.get('/main', function (req, res) {
-  
-   res.render('main.html');
+    //if(!req.session.name)
+        res.render('main.html');
+    // else  
+    //     res.redirect('/pre_user_main');
 
-});
+ });
 
+ 
 
 //로그인 POST
 app.post('/main', function (req, res) {
-  
-    //사용자가 입력한 아이디, 비번 일치하는지 찾는 코드
-
-    //if 비번 = 사용자 입력비번
-    //쿠키 설정 https://victorydntmd.tistory.com/35
-    //  res.redirect("/user_main")
-
-    //else 비번 != 입력비번
-    //  res.redirect("/main")
     
-    
+    var id = req.body.id;
+    var password = req.body.password;
+
+    console.log(id)
+    console.log(password)
+
+    conn.query('SELECT * FROM userinfo WHERE id = ?', [id],
+    function( error, results) {
+        if (error) {
+            // console.log("error ocurred", error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            })
+        } else {
+            // console.log('The solution is: ', results);
+            if(results.length > 0) {
+                
+                    var user=results[0];
+                    
+                    
+                    crypto.pbkdf2(password,user.salt,100000,64,'sha512',async function(err,derivedKey){
+                        if(err)
+                            console.log(err);
+                        if(derivedKey.toString('base64')==user.password){
+                            console.log(results)//로그인 완료
+                            
+                            //req.session.name=user.name;
+                            // req.session.save(function(){
+                            //     return res.redirect('/pre_user_main');
+                            // });
+                            var expiryDate = new Date( Date.now() + 60 * 60 * 1000 * 24); // 24 hour 7일
+                            res.cookie("user",user.id, {
+                                expires:expiryDate,
+                                httpOnly:true,
+                                signed:true
+                    
+                            });
+
+                            res.redirect('/pre_user_main');
+                        }
+                        else {
+                            res.send({
+                                "code": 204,
+                                "success": "Email and password does not match"
+                            });
+                        
+                        }
+                    })
+                   
+                    
+                
+                
+            }
+            else {
+                res.send({
+                    "code":204,
+                    "success": "Email does not exists"
+                });
+            }
+        }    
+    });
 });
 
 
@@ -196,27 +273,31 @@ app.post('/registerAf', function (req, res) {
     var body = req.body;
     console.log(body);
     
-    //암호화 복호화 set
-    var key = 'mykey';
-    var cipher = crypto.createCipher('aes192',key);
-    var decipher = crypto.createDecipher('aes192',key);
+    // //암호화 복호화 set
+    // var key = 'mykey';
+    // var cipher = crypto.createCipher('aes192',key);
+    // var decipher = crypto.createDecipher('aes192',key);
 
-    //암호화(utf8을 base64로 암호화 시킴)
-    cipher.update(body.pswd1,'utf8','base64');
-    var cipheredOutput = cipher.final('base64');
+    // //암호화(utf8을 base64로 암호화 시킴)
+    // cipher.update(body.pswd1,'utf8','base64');
+    // var cipheredOutput = cipher.final('base64');
 
-    //공백란 찾기
-    if(blackSearch(body.pswd1,body.name,body.yy,body.mm,body.dd)){
-        console.log("공백");
-        res.send("공백");
-    }
-
-    else{
-        conn.query("SELECT * FROM userinfo WHERE ID=?",[body.id] , function(err,data){
-
-            if(data.length==0 && body.pswd1 == body.pswd2){//해당 ID가 없고 비번이 확인이 일치할 때 db에 넣는다. (중복확인)
-                var sql = 'INSERT INTO userinfo VALUES(?, ? ,?, ?,?,?,?)';
-                var params = [body.id, body.pswd1, body.name,body.gender,body.yy,body.mm,body.dd];
+    // //공백란 찾기
+    // if(blackSearch(body.pswd1,body.name,body.yy,body.mm,body.dd)){
+    //     console.log("공백");
+    //     res.send("공백");
+    // }
+    var salt='';
+    //else{
+        crypto.randomBytes(64,function(err,buf){
+            salt = buf.toString('base64');
+            console.log('salt', salt);
+            
+            crypto.pbkdf2(body.pswd1,salt,100000,64,'sha512',  async function(err, key){
+                console.log('password', key.toString('base64'));  // 'dWhPkH6c4X1Y71A/DrAHhML3DyKQdEkUOIaSmYCI7xZkD5bLZhPF0dOSs2YZA/Y4B8XNfWd3DHIqR5234RtHzw=='
+                
+                var sql = 'INSERT INTO userinfo VALUES(?, ?, ? ,?, ?,?,?,?)';
+                var params = [body.id, key.toString('base64'), salt, body.name,body.gender,body.yy,body.mm,body.dd];
                 console.log(sql);
                 conn.query(sql, params, function(err) {
                     if(err) {
@@ -225,18 +306,31 @@ app.post('/registerAf', function (req, res) {
                     }
                     else res.redirect('/main');
                 });
-            }
 
-
+                var sql = 'INSERT INTO alarm VALUES(?, ?, ? ,?, ?)';
+                var params = [body.id, 0,0,0,0];
+                console.log(sql);
+                conn.query(sql, params, function(err) {
+                    if(err) {
+                        console.log('query is not excuted. insert fail...\n' + err);
+                        return;
+                    }
+                    else res.redirect('/main');
+                });
+            })
+            
         });
+        
+  
 
-        decipher.update(cipheredOutput,'base64','utf8');
-        var decipheredOuput=decipher.final('utf8');
+               
+        // decipher.update(cipheredOutput,'base64','utf8');
+        // var decipheredOuput=decipher.final('utf8');
 
-        console.log('원문 : '+pswd1);//원본
-        console.log('암호화 : '+cipheredOutput);//암호화
-        console.log('복호화 : '+decipheredOuput);//복호화
-    }
+        // console.log('원문 : '+pswd1);//원본
+        // console.log('암호화 : '+cipheredOutput);//암호화
+        // console.log('복호화 : '+decipheredOuput);//복호화
+    //}
    }catch(err){
        console.log(err);
    }
@@ -253,7 +347,7 @@ app.post('/registerAf', function (req, res) {
 app.get('/user_main', function (req, res) {
     
     res.render('user_main.html');
-    var postureresult=[]
+
 
 });
 
@@ -264,17 +358,84 @@ app.get('/user_main', function (req, res) {
 
 
 app.get('/pre_user_main', function (req, res) {
-    
-    res.render('pre_user_main.html');
-    var postureresult=[]
+    // if(!req.session.name)
+    //     return res.redirect('/main');
+    // else
+    var visitors = req.signedCookies.user;
+    console.log(visitors)
 
+    res.render('pre_user_main.html');
+    
+
+});
+
+app.get('/logout',function(req,res){//로그아웃기능
+    res.clearCookie("loginObj");	
+	res.redirect("/main");
 });
 
 
 //알람을 몇 시간 주기로 할 건지 설정하는 화면
 app.get('/alarm_settings', function (req, res) {
-   
+    // var visitors = req.signedCookies.user;//들어가면 이전에 설정했던거 보이는 부분 
+    // console.log(visitors);
+
+ 
+    // conn.query('select * from alarm WHERE id= ?', [visitors],
+    // function( error, results) {
+    //     if (error) {
+    //         console.log('query is not excuted. select fail...\n' + err);
+    //         return;
+    //     }
+    //     else{
+    //         let predata = {
+    //             starttime : results[0].starttime,
+    //             posture_start:results[0].posture_start,
+    //             posture_end:results[0].posture_end,
+    //             period:results[0].period
+    //         }
+
+    //         try{
+    //             var responsedata =  axios.post('http://localhost:3000/alarm_settings',  JSON.stringify(predata), {
+    //             headers: {
+    //                 'Content-Type': `application/json`,
+    //             }
+    //             })
+    //             console.log(".....")
+    //             console.log(responsedata)
+    //         }catch(e){console.log("[ERROR|success alarm data error] : ",e)}
+           
+    //     }
+        
+    // });
+
     res.render('alarm_settings.html');
+
+});
+
+app.post('/alarm_settingsAf', function (req, res) {
+
+    var visitors = req.signedCookies.user;
+    console.log(visitors);
+
+    var starttime = req.body.starttime;
+    var posture_start = req.body.posture_start;
+    var posture_end = req.body.posture_end;
+    var period = req.body.period;
+    console.log(posture_end);
+
+    var sql= 'UPDATE alarm SET starttime=?,posture_start=?,posture_end=?,period=? WHERE id= ?';
+    var params = [starttime, posture_start,posture_end,period,visitors];
+    console.log(sql);
+    conn.query(sql, params, function(err) {
+        if(err) {
+            console.log('query is not excuted. update fail...\n' + err);
+            return;
+        }
+        
+    });
+
+    
 
 });
 
