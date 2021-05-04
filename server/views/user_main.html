@@ -7,46 +7,42 @@
   <title>Desk Friend</title>
 </head>
 <body>
-  
-  <header>
-    <div class="pause">
-      <h2 id="sentence"></h2>
-      <!--<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">-->
-      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png" id="play">
-      
-    </div>
-  </header>
+<header>
+  <div class="pause">
+    <h2 id="sentence"></h2>
+    <!--<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">-->
+    <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png" id="play">
+    
   </div>
-  <video autoplay></video>
-  
+</header>
+<video autoplay></video>
+
+    <script type="text/javascript" src='js/TimeInfo.js'></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
-        
-       
-
-        document.getElementById('play').addEventListener('click', onClick); // 이벤트 연결
-        // get video dom element
-        const video = document.querySelector('video');
-        
-        window.onload = function () {
-            if (window.Notification) {
-                Notification.requestPermission();
-                //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
-                
-            }
-            if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
-              localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
-            }
-            if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
-              localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
-            }
-            console.log(localStorage.getItem('posturealarm'))//확인용
+    
+      console.log("flag: ",localStorage.getItem('flag'))
+      console.log("startflag: ",localStorage.getItem('startflag'))
+      console.log("justoneflag: ",localStorage.getItem('justoneflag'))
+      console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
       
-        }
+     
+            
+      document.getElementById('play').addEventListener('click', onClick); // 이벤트 연결
+      // get video dom element
+      const video = document.querySelector('video');
+
+      const WS_URL = 'ws://localhost:3000';
+      const FPS = 3;
+      var ws;
+      
+      document.getElementById("sentence").innerText = '재생버튼을 클릭해 서비스를 시작해주세요';
+     
+      
 
  
         // request access to webcam
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+       // navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
         
         const getFrame = () => {
         
@@ -59,52 +55,190 @@
         
             return data;
         }
-        
-        var flag = 0;//처음 시작은 일시정지 상태
-        const WS_URL = 'ws://localhost:3000';
-        const FPS = 3;
-        var ws;
 
-        function onClick() {
+  
+    
+        
+      // localStorage.setItem('flag',"0")
+      // localStorage.setItem('startflag',"2")
+      // localStorage.setItem('justoneflag',"0")
+      // localStorage.setItem('justoneflag2',"0")
+
+      // var flag = 0;//처음 시작은 일시정지 상태 0:일시정지상태, 1: 재생상태
+      // var startflag=2;
+      // var justoneflag=0;
+      // var justoneflag2=0;
+
+      var starttime = localStorage.getItem('starttime');
+      var posture_start = localStorage.getItem('posture_start')
+      var posture_end = localStorage.getItem('posture_end')
+      var period = localStorage.getItem('period')
+
+      var string=posture_end.split(":");
+      var string_end_m=string[1]*60;//분을 초로
+      
+      console.log(string_end_m)
+      
+
+      console.log(period)
+      var string=period.split(":");
+      var string_h=(string[0]%12)*3600;//시를 초로
+      var string_m=(string[1])*60;//분을 초로
+      console.log(string_h)
+      console.log(string_m)
+
+      turnstate_on();
+      turnstate_off();
+
+      function getTime() { //현재시간 반환함수
+        
+        const now=new Date();
+        const hour=now.getHours();
+        const minute =now.getMinutes();
+        var currTime;
+        if (minute<10){
+          currTime=hour+":0"+minute;
+        }
+        else{
+          currTime=hour+":"+minute;
+        }
+        // setInterval(() => {
+        //         console.log(`interval 2000`);
+        //       }, 2000);
+        console.log(currTime);
+        if(currTime==starttime){//설정한 시작 시간이 되면 
+          localStorage.setItem('startflag',"1")
+          //startflag=1;
+          turnstate_on();
+          localStorage.setItem('justoneflag',"1")
+          localStorage.setItem('justoneflag2',"0")
+          //justoneflag=1;
+          console.log("aaa");
+          clearInterval(checkTime)
+          setTimeout(function(){
+              localStorage.setItem('startflag',"0")
+              turnstate_off();
+              localStorage.setItem('justoneflag2',"1")
+              localStorage.setItem('justoneflag',"0")
+              //justoneflag2=1;
+              console.log("it's end time")
+              var checkperiod= setInterval (function() {//1초 간격으로 getTime() 메소드 호출
          
-          if(flag==0){//flag가 0인 상태에서 버튼을 클릭했다면
-            alert('서비스 사용을 시작합니다.');
-            document.getElementById("sentence").innerText = '';
-            document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png";
-            flag=1; //재생상태로 변환
-            
-            navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
-        
-            
+         console.log('Interval 2000');
+         localStorage.setItem('startflag',"1")
+         //startflag=1;
+         turnstate_on();
+         localStorage.setItem('justoneflag',"1")
+         localStorage.setItem('justoneflag2',"0")
+         setTimeout(function(){
+           localStorage.setItem('startflag',"0")
+           turnstate_off();
+           localStorage.setItem('justoneflag2',"1")
+           localStorage.setItem('justoneflag',"0")
+           //justoneflag2=1;
+           console.log("it's period end time")
+         },string_end_m*1000);
+
+       },string_m*1000);
+            },string_end_m*1000);
             
 
-            ws =  new WebSocket(WS_URL);
-            ws.onopen = () => {
-                console.log(`Connected to ${WS_URL}`);
-                setInterval(() => {
-                    ws.send(getFrame());
-                }, 30000 / FPS);
+            
+        }
+        // else if(currTime==posture_end){//자세교정 종료시간이 되었다면
+        //   //startflag=0;//자세교정 중지
+        //   localStorage.setItem('startflag',"0")
+        //   turnstate_off();
+        //   localStorage.setItem('justoneflag2',"1")
+        //   localStorage.setItem('justoneflag',"0")
+        //   //justoneflag2=1;
+        //   console.log("it's end time")
+        //   clearInterval(checkTime)
+
+        //   var checkperiod= setInterval (function() {//1초 간격으로 getTime() 메소드 호출
+         
+        //     console.log('Interval 2000');
+        //     localStorage.setItem('startflag',"1")
+        //     //startflag=1;
+        //     turnstate_on();
+        //     localStorage.setItem('justoneflag',"1")
+        //     localStorage.setItem('justoneflag2',"0")
+        //     setTimeout(function(){
+        //       localStorage.setItem('startflag',"0")
+        //       turnstate_off();
+        //       localStorage.setItem('justoneflag2',"1")
+        //       localStorage.setItem('justoneflag',"0")
+        //       //justoneflag2=1;
+        //       console.log("it's period end time")
+        //     },string_end_m*1000);
+
+        //   },string_m*1000);
+
+        // }
+        console.log("flag: ",localStorage.getItem('flag'))
+      console.log("startflag: ",localStorage.getItem('startflag'))
+      console.log("justoneflag: ",localStorage.getItem('justoneflag'))
+      console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
+      }
+       
+       //console.log(startflag);
+
+      var checkTime= setInterval (function() {//1초 간격으로 getTime() 메소드 호출
+         
+           getTime()
+         
+      },1000);
+  
+
+      
+
+      function turnstate_on(){
+        if(localStorage.getItem('flag')=='1' && localStorage.getItem('startflag')=='1' && localStorage.getItem('justoneflag')=='0' ){//자세 detect
+          console.log("turn on");
+          var state = localStorage.getItem('webcamalarm')
+          document.getElementById("sentence").innerText = '자세 분석 중입니다.';
+           
+            if (state=="true"){
+              var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                  icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                  body: '웹캠이 켜집니다', //알람 내용
+                });
+
+                  notification.onclick = function () {
+                    window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
             }
+       
+       
+          navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+          
+          ws =  new WebSocket(WS_URL);
+          ws.onopen = () => {
+              console.log(`Connected to ${WS_URL}`);
+              setInterval(() => {
+                  ws.send(getFrame());
+              }, 30000 / FPS);
+          }
 
-            ws.onmessage= function(event){
-              console.log("server message: ",event.data);
-              let recData = JSON.parse(event.data);
-              console.log("flag message: ",recData.flag);
-              var data=[];
+          ws.onmessage= function(event){
+            console.log("server message: ",event.data);
+            let recData = JSON.parse(event.data);
+            console.log("flag message: ",recData.flag);
+            var data=[];
 
 
-              if (Notification.permission !== 'granted') {
-                    alert('notification is disabled');
-              }
-              else {
-                var state = localStorage.getItem('posturealarm')
-                if (state=="true"){
+            if (Notification.permission !== 'granted') {
+                  alert('notification is disabled');
+            }
+            else {
+              var state = localStorage.getItem('posturealarm')
+              if (state=="true"){
                   if(recData.flag ==1){//모니터에 다 안담긴 경우
                   var notification = new Notification("[DESK FRIENDS]", { //알람 제목
                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
                   body: '모니터에 어깨와 얼굴이 다 나오도록 자세를 바르게 해주세요', //알람 내용
                 });
-    
+
                   notification.onclick = function () {
                     window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
                   };
@@ -126,34 +260,124 @@
                     icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
                     body: data + "이(가) 바르지 않습니다 자세를 바르게 해주세요", //알람 내용
                   });
-    
+
                   notification.onclick = function () {
                   window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
                 };
                 }
-                }
-              
-                
-           
-               }
-             }
-          }
+              }
+              }
+            }
+
+        }
+      }
+
+      function turnstate_off(){
+        if(localStorage.getItem('startflag')=='0' && localStorage.getItem('justoneflag2')=='0'){//자세 detect 중지
+          document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작합니다';
           
-          else if(flag==1){//flag가 1인 상태에서 버튼을 클릭했다면
-            alert('서비스 사용이 일시 중지 되었습니다.');
-            document.getElementById("sentence").innerText = '재생 버튼을 클릭해 서비스를 재개해주세요';
-            document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png";
-            flag=0; //일시정지 변환
-            ws.close();
+          console.log("close ws....")
+          
+          localStorage.setItem('flag',"1")
+          //flag=1;
+          if(video!=""){
             video.pause();
+            video.srcObject.getTracks()[0].stop();
             video.src = "";//웹캠꺼진거 표시할 수 있는 이미지면 좋겠음
-  	        video.srcObject.getTracks()[0].stop();
+            
+            
+            
+          }
+          if(ws!=null){
+            ws.close();
           }
           
         }
+      };
         
+      function onClick() {
+         
+         if(localStorage.getItem('flag')=='0'){//flag가 0인 상태에서 버튼을 클릭했다면
+           alert('서비스 사용을 시작합니다.');
+           document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작합니다';
+           document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png";
+           localStorage.setItem('flag',"1"); //재생상태로 변환
+           //turnstate_on();
+            //navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+        
+          }
+         
+         else if(localStorage.getItem('flag')=='1'){//flag가 1인 상태에서 버튼을 클릭했다면
+           alert('서비스 사용이 일시 중지 되었습니다.');
+           document.getElementById("sentence").innerText = '재생 버튼을 클릭해 서비스를 재개해주세요';
+           document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png";
+           localStorage.setItem('flag',"0"); //일시정지 변환
+           localStorage.setItem('startflag',"0");
+          
+           if(video!=""){
+            video.pause();
+            video.srcObject.getTracks()[0].stop();
+            video.src = "";//웹캠꺼진거 표시할 수 있는 이미지면 좋겠음
+            
+            
+            
+          }
+          
+ 
+          if(ws!=null){
+            ws.close();
+          }
+         }
+      }
+      
+      window.onload = function () {
+                 
+                localStorage.setItem('flag',"0") //false로 우선 셋팅
+               
+               localStorage.setItem('startflag',"2") //false로 우선 셋팅
+               
+               localStorage.setItem('justoneflag',"0") //false로 우선 셋팅
+             
+               localStorage.setItem('justoneflag2',"0") //false로 우선 셋팅
 
-       
+
+            if (window.Notification) {
+                Notification.requestPermission();
+                //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
+                
+            }
+            if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
+            }
+            if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
+            }
+            
+            checkTime;
+
+            // if(localStorage.getItem('flag')=='1'){//flag가 0인 상태에서 버튼을 클릭했다면
+            
+            //   document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작합니다';
+            //   document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png";
+             
+            
+            //   }
+            
+            // else if(localStorage.getItem('flag')=='0'){//flag가 1인 상태에서 버튼을 클릭했다면
+            
+            //   document.getElementById("sentence").innerText = '재생 버튼을 클릭해 서비스를 재개해주세요';
+            //   document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/play.png";
+             
+             
+            
+            // }
+           
+            // if(localStorage.getItem('flag')=='1' && localStorage.getItem('startflag')=='1' && localStorage.getItem('justoneflag')=='1' ){//자세 detect
+            //   document.getElementById("sentence").innerText = '자세 분석 중입니다.';
+            //   navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+          
+            // }
+        }
         </script>
         
    
@@ -164,19 +388,14 @@
   <!--하단 설정 메뉴바 -->
   <div class="footer">
     <div class="left">
-      <!--<a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>-->
-      <button type="button" class="navyBtn" onClick="location.href='/alarm_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/alarm.png" id="settings"></button><!--이런식으로 바꾸는거 보연이에게 상의-->
-    </div>
+      <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
+  </div>
     <div class="right">
-      <!--<a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
-      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>-->
-    
-      <button type="button" class="navyBtn" onClick="location.href='/callender'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/user-icon.png" id="settings"></button>
-      <button type="button" class="navyBtn" onClick="location.href='/onoff_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/settings.png" id="settings"></button>
+      <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
     </div>
   </div>
   </body>
-  
   
 <style>
   html {
