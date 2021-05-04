@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <script type='text/javascript'src='js/jquery.js'></script>
+  <script type='text/javascript'src='js/timepicki.js'></script>
+
+  <!-- Custom styles for this template -->
+  <link rel='stylesheet' type='text/css' href='css/styforalse.css'/>
+  <link rel='stylesheet' href='css/timepicki.css'>
+
+  <title>Desk Friend</title>
+</head>
+<body>
+    <!-- <form action='/alarm_settingsAf' method='post'> -->
+  <div class="window-wrap">
+    <div class="inner cover indexpicker">
+        <!-- 우선 이케 넣음 -->
+      <h3>시작시간</h3><h4> 이전에 설정된 값:</h4><h4 id="boom"> </h4>
+      <input id='timepicker1' type='text'name='timepicker1'/>
+      <h3>자세교정</h3>
+      <input id='timepicker2_start' type='text'name='timepicker2_start'/>
+      <h3>~</h3>
+      <input id='timepicker2_end' type='text'name='timepicker2_end'/>
+      <h3>알람 주기</h3>
+      <input id='timepicker3' type='text'name='timepicker3'/>
+      <button type="submit" onclick="onButtonClicked()">설정</button>
+    </div>
+  </div>
+<!-- </form> -->
+
+  <!--하단 설정 메뉴바 -->
+  <div class="footer">
+    <div class="left">
+      <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
+  </div>
+    <div class="right">
+      <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
+    </div>
+  </div>
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/timepicki.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    
+    // axios.get('http://localhost:3000/alarm_settings')
+    // .then(function(response){ 띄우면 이전에 설정한거 바로 보이는 부분
+    //     console.log(response)
+    // })
+    // .catch(function (error) {
+    //     console.log(error);
+    // })
+    // .then(function(response){
+    //     console.log(response.predata)
+    // })
+    window.onload = function () {
+    console.log(localStorage.getItem('starttime'))
+    if(localStorage.getItem('starttime')!=null){//이 페이지에 처음 들어간 상황이라면
+        document.getElementById("boom").innerText = localStorage.getItem('starttime');
+    }
+    localStorage.removeItem("flag");
+    localStorage.removeItem("startflag");
+    localStorage.removeItem("justoneflag");
+    localStorage.removeItem("justoneflag2");
+    // else{
+    //   var state = localStorage.getItem('posturealarm')
+    //   if (state=="true"){
+    //     $("input[id=posture]:checkbox").attr('checked', 'checked');
+    //   }
+    // }
+
+    
+    // if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
+    //   localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
+    // }
+    
+    // else{
+    //   var state = localStorage.getItem('webcamalarm')
+    //   if (state=="true"){
+    //     $("input[id=webcam]:checkbox").attr('checked', 'checked');
+    //   }
+    // }
+  
+        
+  }
+  const convertTime12to24 = (time12h) => {
+        const [time, modifier] = time12h.split(' ');
+
+        let [hours, minutes] = time.split(':');
+
+        if (hours === '12') {
+            hours = '00';
+        }
+
+        if (modifier === 'PM') {
+            hours = parseInt(hours, 10) + 12;
+        }
+
+        return `${hours}:${minutes}`;
+    }
+
+    function onButtonClicked(){
+            var starttime= document.getElementById("timepicker1").value ;
+            var posture_start= document.getElementById("timepicker2_start").value ;
+            var posture_end= document.getElementById("timepicker2_end").value ;
+            var period= document.getElementById("timepicker3").value ;
+            console.log(starttime)
+            console.log(posture_start)
+            console.log(posture_end)
+            console.log(period)
+            starttime=convertTime12to24(starttime)
+            posture_start=convertTime12to24(posture_start)
+            posture_end=convertTime12to24(posture_end)
+            period=convertTime12to24(period)
+
+           
+            
+            let data = {
+                starttime : starttime,
+                posture_start:posture_start,
+                posture_end:posture_end,
+                period:period
+            }
+            try{
+                var responsedata =  axios.post('http://localhost:3000/alarm_settingsAf',  JSON.stringify(data), {
+                headers: {
+                    'Content-Type': `application/json`,
+                }
+                })
+                console.log(responsedata)
+            }catch(e){console.log("[ERROR|success alarm data error] : ",e)}
+
+
+            
+            localStorage.setItem('starttime',starttime)
+            console.log(localStorage.getItem('starttime'))//확인용
+            localStorage.setItem('posture_start',posture_start)
+            localStorage.setItem('posture_end',posture_end)
+            localStorage.setItem('period',period)
+    }
+      function printTime(){
+          const time = document.getElementById("timepicker1").value;
+          
+      }
+
+
+    $('#timepicker1').timepicki();
+    $('#timepicker2_start').timepicki();
+    $('#timepicker2_end').timepicki();
+    $('#timepicker3').timepicki();
+  </script>
+  <script src="js/bootstrap.min.js"></script>
+  </body>
+  </html>
