@@ -39,7 +39,11 @@
 <script>
 
 window.onload = function () {
-    
+  localStorage.removeItem("flag");
+  localStorage.removeItem("startflag");
+  localStorage.removeItem("justoneflag");
+  localStorage.removeItem("justoneflag2");
+
     if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
       localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
     }
@@ -103,15 +107,11 @@ window.onload = function () {
   <!--하단 설정 메뉴바 -->
   <div class="footer">
     <div class="left">
-      <!--<a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>-->
-      <button type="button" class="navyBtn" onClick="location.href='/alarm_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/alarm.png" id="settings"></button><!--이런식으로 바꾸는거 보연이에게 상의-->
-    </div>
+      <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
+  </div>
     <div class="right">
-      <!--<a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
-      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>-->
-    
-      <button type="button" class="navyBtn" onClick="location.href='/callender'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/user-icon.png" id="settings"></button>
-      <button type="button" class="navyBtn" onClick="location.href='/onoff_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/settings.png" id="settings"></button>
+      <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
     </div>
   </div>
   </body>
