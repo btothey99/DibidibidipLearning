@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
   <meta charset='utf-8'/>
-  <link rel='stylesheet' href='styformain.css'/>
+  <link rel="stylesheet" type="text/css" href="css/styformain.css" />
   <title>Desk Friend</title>
 </head>
 <body>
@@ -23,19 +23,24 @@
           <p> '올바른 자세와 집중력 향상을 책임져주는, 내 책상 위의 가장 가까운 친구'</p>
         </div>
     		</header>
+			<form action='/main' method='post'>
     		<section class="login-input-section-wrap">
     			<div class="login-input-wrap">
-    				<input placeholder="Username" type="text"></input>
+    				<input placeholder="Username" id="id" name="id" type="text"></input>
     			</div>
     			<div class="login-input-wrap password-wrap">
-    				<input placeholder="Password" type="password"></input>
+    				<input placeholder="Password" id="password"   name="password" type="password"></input>
     			</div>
     			<div class="login-button-wrap">
-    				<button>Sign in</button>
+    				<button type="submit" id="btnJoin">
+                        <span>Sign in</span>
+                    </button>
+					
     			</div>
     			<div class="login-stay-sign-in">
     				<i class="far fa-check-circle"></i>
     				<span>Stay Signed in</span>
+
     			</div>
     		</section>
     		<section class="Easy-sgin-in-wrap">
@@ -48,8 +53,9 @@
     		</footer>
     		</div>
     	</div>
+	</form>
 </body>
-
+<!-- 
 <style>
     :root{
 	--body-background-color: #f5f6f7;
@@ -61,17 +67,13 @@
   --dskfrd-color2 : #bdc9a6;
   --dskfrd-color3 : #82b8ad;
 }
-
-
 *{
 	margin:0;
 	padding:0;
 }
-
 body{
 	background:var(--body-background-color);
 }
-
 .main-container{
 	width:100%;
 	display:flex;
@@ -81,7 +83,6 @@ body{
 }
 .main-container .main-wrap{
 	width:768px;
-
 }
 .main-container .main-wrap .sel-lang-wrap .lang-select
 {
@@ -98,18 +99,15 @@ body{
 	width: 231px;
 	height: 44px;
 }
-
 .main-container .main-wrap header .sel-lang-wrap{
 	display:flex;
 	justify-content:flex-end;
 }
-
 .main-container .main-wrap header .logo-wrap{
 	display:flex;
 	flex-direction: column;
 	align-items: center;
 }
-
 .main-container .main-wrap header .title h1 {
   padding-top: 30px;
   display:flex;
@@ -117,21 +115,18 @@ body{
   flex-direction: column;
   align-items: center;
 }
-
 .main-container .main-wrap header .title p {
   display:flex;
   flex-direction: column;
   font-size: 15px;
   align-items: center;
 }
-
 .login-input-section-wrap{
 	padding-top: 30px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
-
 .login-input-wrap{
 	width: 465px;
 	height :48px;
@@ -163,7 +158,6 @@ body{
 .login-stay-sign-in{
 	width: 465px;
 	height: 52px;
-
 	display: flex;
 	font-size: 15px;
 	color: #4e4e4e;
@@ -179,14 +173,11 @@ body{
 	padding-left: 5px;
 	line-height: 25px;
 }
-
 .Easy-sgin-in-wrap{
-
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding-top: 40px;
-
 }
 .Easy-sgin-in-wrap h2{
 	font-size: 20px;
@@ -214,7 +205,6 @@ body{
 	padding-left: 15px;
 	font-size: 20px;
 }
-
 .Easy-sgin-in-wrap .sign-button-list li button span{
 	padding-left: 20px;
 	font-size: 18px;
@@ -223,29 +213,20 @@ body{
 	color:var(--font-color);
 	font-size: 14px;
 	padding-top: 10px;
-
 }
 footer{
-
 	padding-top: 95px;
 	padding-bottom: 15px;
-
 	display:flex;
 	flex-direction:column;
 	align-items:center;
 	width:768px;
-
-
-
 }
 .copyright-wrap{
-
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	height: 15px;
-
-
 }
 footer .copyright-wrap span img{
 	width: 59px;
@@ -256,4 +237,4 @@ footer .copyright-wrap span{
 	line-height: 15px;
 }
 </style>
-</html>
+</html> -->
