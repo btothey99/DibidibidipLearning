@@ -20,10 +20,29 @@
       <h3>시작시간</h3>
       <input id='timepicker1' type='text'name='timepicker1'/>
       <h3>자세교정</h3>
-      <input id='timepicker2' type='text'name='timepicker2'/>
-      <h3>알람 주기</h3>
-      <input id='timepicker3' type='text'name='timepicker3'/>
-      <h5>설정</h5>
+      <select id="min" class="min-select" name='min'>
+        <option>00</option>
+        <option>05</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+        <option>25</option>
+        <option>30</option>
+        <option>35</option>
+        <option>40</option>
+        <option>45</option>
+        <option>50</option>
+        <option>55</option>
+      </select>
+      <h3>알람주기</h3>
+      <select id="hour" class="hour-select" name='hour'>
+        <option>0시간 30분</option>
+        <option>1시간 00분</option>
+        <option>1시간 30분</option>
+        <option>2시간 00분</option>
+        <option>2시간 30분</option>
+        <option>3시간 00분</option>
+      </select>
     </div>
   </div>
 
@@ -44,8 +63,6 @@
   <script src="js/timepicki.js"></script>
   <script>
     $('#timepicker1').timepicki();
-    $('#timepicker2').timepicki();
-    $('#timepicker3').timepicki();
   </script>
   <script src="js/bootstrap.min.js"></script>
   </body>
