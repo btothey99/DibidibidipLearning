@@ -32,6 +32,18 @@ input[type='text'] {
 }
 .indexpicker .time_pick > input { width:100%; margin-bottom:20px;}
 
+.min-select {
+	justify-content:flex-end;
+  width: 60px;
+	height: 30px;
+
+}
+.hour-select {
+	justify-content:flex-end;
+  width: 100px;
+	height: 30px;
+
+}
 
 .footer {
   width:100%;
