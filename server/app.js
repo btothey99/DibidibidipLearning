@@ -60,15 +60,19 @@ var preimageName = "preimage.jpg";
     
 wsServer.on('connection',  (ws, req) => {
     console.log('Connected');
-   
+ 
     //console.log(req.file);
     // add new connected client
 
-    connectedClients.push(ws);
+    //connectedClients.push(ws);
 
     // listen for messages from the streamer, the clients will not send anything so we don't need to filter
     ws.send("난 app.js다");
-    
+    ws.on('close',function(){
+        console.log("close ws")
+        ws.close()
+     
+    })
     
     ws.on('message',  async function(message) {
         
@@ -136,9 +140,9 @@ wsServer.on('connection',  (ws, req) => {
                 ws.send("하나 싸이클 돌았다");
             
                 //ws.send(data); // send
-        } else { // if it's not connected remove from the array of connected ws
-        connectedClients.splice(i, 1);
-        } 
+        } //else { // if it's not connected remove from the array of connected ws
+        // connectedClients.splice(i, 1);
+        // } 
         
     });
 });
@@ -273,20 +277,7 @@ app.post('/registerAf', function (req, res) {
     var body = req.body;
     console.log(body);
     
-    // //암호화 복호화 set
-    // var key = 'mykey';
-    // var cipher = crypto.createCipher('aes192',key);
-    // var decipher = crypto.createDecipher('aes192',key);
-
-    // //암호화(utf8을 base64로 암호화 시킴)
-    // cipher.update(body.pswd1,'utf8','base64');
-    // var cipheredOutput = cipher.final('base64');
-
-    // //공백란 찾기
-    // if(blackSearch(body.pswd1,body.name,body.yy,body.mm,body.dd)){
-    //     console.log("공백");
-    //     res.send("공백");
-    // }
+   
     var salt='';
     //else{
         crypto.randomBytes(64,function(err,buf){
@@ -302,21 +293,30 @@ app.post('/registerAf', function (req, res) {
                 conn.query(sql, params, function(err) {
                     if(err) {
                         console.log('query is not excuted. insert fail...\n' + err);
+                        res.send({
+                            "code": 204,
+                            "success": "회원가입 에러입니다."
+                        });
                         return;
                     }
-                    else res.redirect('/main');
+                    else {
+                        
+
+                        var sql = 'INSERT INTO alarm VALUES(?, ?, ? ,?)';
+                        var params = [body.id, 0,0,0];
+                        console.log(sql);
+                        conn.query(sql, params, function(err) {
+                            if(err) {
+                                console.log('query is not excuted. insert fail...\n' + err);
+                                return;
+                            }
+                            else res.redirect('/main');
+                        });
+                    }
+                    
                 });
 
-                var sql = 'INSERT INTO alarm VALUES(?, ?, ? ,?, ?)';
-                var params = [body.id, 0,0,0,0];
-                console.log(sql);
-                conn.query(sql, params, function(err) {
-                    if(err) {
-                        console.log('query is not excuted. insert fail...\n' + err);
-                        return;
-                    }
-                    else res.redirect('/main');
-                });
+                
             })
             
         });
@@ -419,10 +419,8 @@ app.post('/alarm_settingsAf', function (req, res) {
     console.log(visitors);
 
     var starttime = req.body.starttime;
-    var posture_start = req.body.posture_start;
-    var posture_end = req.body.posture_end;
+    var posture = req.body.posture;
     var period = req.body.period;
-    console.log(posture_end);
 
     var sql= 'UPDATE alarm SET starttime=?,posture_start=?,posture_end=?,period=? WHERE id= ?';
     var params = [starttime, posture_start,posture_end,period,visitors];
@@ -434,8 +432,6 @@ app.post('/alarm_settingsAf', function (req, res) {
         }
         
     });
-
-    
 
 });
 
