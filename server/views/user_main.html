@@ -35,7 +35,8 @@
       const WS_URL = 'ws://localhost:3000';
       const FPS = 3;
       var ws;
-      
+     
+     
       document.getElementById("sentence").innerText = '재생버튼을 클릭해 서비스를 시작해주세요';
      
       
@@ -43,8 +44,8 @@
  
         // request access to webcam
        // navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
-        
-        const getFrame = () => {
+  
+        function getFrame() {
         
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
@@ -70,25 +71,26 @@
       // var justoneflag2=0;
 
       var starttime = localStorage.getItem('starttime');
-      var posture_start = localStorage.getItem('posture_start')
-      var posture_end = localStorage.getItem('posture_end')
+      var posture = localStorage.getItem('posture')
       var period = localStorage.getItem('period')
+      var wsflag=0;
 
-      var string=posture_end.split(":");
-      var string_end_m=string[1]*60;//분을 초로
+ 
+      var string_end_m=parseInt(posture)*60;//분을 초로 <1분>
       
       console.log(string_end_m)
-      
-
-      console.log(period)
-      var string=period.split(":");
-      var string_h=(string[0]%12)*3600;//시를 초로
-      var string_m=(string[1])*60;//분을 초로
+     
+      console.log(".......period.........")
+      var string=period.split(" ");
+      console.log(string[0])
+      console.log(string[1])
+      var string_h=(parseInt(string[0])%12)*3600;//시를 초로
+      var string_m=parseInt(string[1])*60;//분을 초로 <2분>
       console.log(string_h)
-      console.log(string_m)
+      console.log(string_m) 
 
-      turnstate_on();
-      turnstate_off();
+      console.log("................")
+      console.log(string_h*1000+ string_m*1000-string_end_m*1000) //1분
 
       function getTime() { //현재시간 반환함수
         
@@ -107,9 +109,12 @@
         //       }, 2000);
         console.log(currTime);
         if(currTime==starttime){//설정한 시작 시간이 되면 
+
+         
           localStorage.setItem('startflag',"1")
           //startflag=1;
           turnstate_on();
+        
           localStorage.setItem('justoneflag',"1")
           localStorage.setItem('justoneflag2',"0")
           //justoneflag=1;
@@ -121,26 +126,64 @@
               localStorage.setItem('justoneflag2',"1")
               localStorage.setItem('justoneflag',"0")
               //justoneflag2=1;
-              console.log("it's end time")
-              var checkperiod= setInterval (function() {//1초 간격으로 getTime() 메소드 호출
-         
-         console.log('Interval 2000');
-         localStorage.setItem('startflag',"1")
-         //startflag=1;
-         turnstate_on();
-         localStorage.setItem('justoneflag',"1")
-         localStorage.setItem('justoneflag2',"0")
-         setTimeout(function(){
-           localStorage.setItem('startflag',"0")
-           turnstate_off();
-           localStorage.setItem('justoneflag2',"1")
-           localStorage.setItem('justoneflag',"0")
-           //justoneflag2=1;
-           console.log("it's period end time")
-         },string_end_m*1000);
+              console.log("it's end time///////////////")
 
-       },string_m*1000);
-            },string_end_m*1000);
+              setTimeout(function(){
+                  console.log("it's check time!!!!")
+                  var state = localStorage.getItem('posturealarm')
+                  if (state=="true"){
+                    var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                        icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                        body: '바른 자세를 유지하고 있나요?', //알람 내용
+                      });
+
+                        notification.onclick = function () {
+                          window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                        };
+                  }
+       
+                },(string_h*1000+string_m*1000-string_end_m*1000)/3);
+
+              var checkperiod= setInterval (function() {
+
+               
+                console.log('Interval 2000');
+                localStorage.setItem('startflag',"1")
+                //startflag=1;
+                turnstate_on();
+                console.log('setInterval turnstate_on////////////');
+                localStorage.setItem('justoneflag',"1")
+                localStorage.setItem('justoneflag2',"0")
+
+                setTimeout(function(){
+                  localStorage.setItem('startflag',"0")
+                  turnstate_off();
+                  console.log('setTimeout turnstate_off');
+                  localStorage.setItem('justoneflag2',"1")
+                  localStorage.setItem('justoneflag',"0")
+                  //justoneflag2=1;
+                  console.log("it's period end time")
+                },string_end_m*1000);//string_end_m*1000
+
+                 setTimeout(function(){
+                  console.log("!!!it's check time!!!!")
+                  var state = localStorage.getItem('posturealarm')
+                  if (state=="true"){
+                    var notification = new Notification("[DESK FRIENDS]", { //알람 제목
+                        icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                        body: '바른 자세를 유지하고 있나요?', //알람 내용
+                      });
+
+                        notification.onclick = function () {
+                          window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                        };
+                  }
+       
+                },string_end_m*1000 + (string_h*1000+string_m*1000-string_end_m*1000)/3);
+
+
+              },string_m*1000);//string_h*1000+string_m*1000, 또는 string_m*1000-string_end_m*1000>>30000
+          },string_end_m*1000);//string_end_m*1000>>10000
             
 
             
@@ -176,9 +219,9 @@
 
         // }
         console.log("flag: ",localStorage.getItem('flag'))
-      console.log("startflag: ",localStorage.getItem('startflag'))
-      console.log("justoneflag: ",localStorage.getItem('justoneflag'))
-      console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
+        console.log("startflag: ",localStorage.getItem('startflag'))
+        console.log("justoneflag: ",localStorage.getItem('justoneflag'))
+        console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
       }
        
        //console.log(startflag);
@@ -197,7 +240,7 @@
           console.log("turn on");
           var state = localStorage.getItem('webcamalarm')
           document.getElementById("sentence").innerText = '자세 분석 중입니다.';
-           
+          wsflag=1
             if (state=="true"){
               var notification = new Notification("[DESK FRIENDS]", { //알람 제목
                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
@@ -211,13 +254,25 @@
        
        
           navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
-          
+       
           ws =  new WebSocket(WS_URL);
-          ws.onopen = () => {
+
+          console.log("ws:" ,ws);
+          ws.onopen = function() {
+              
               console.log(`Connected to ${WS_URL}`);
-              setInterval(() => {
+              var temp= setInterval (function() {
+                if(wsflag==0){
+                  clearInterval(temp);
+
+                }
                   ws.send(getFrame());
               }, 30000 / FPS);
+          }
+          ws.onclose=()=>{
+            ws.close();
+            wsflag=0
+            console.log(`ws.onclose`);
           }
 
           ws.onmessage= function(event){
@@ -232,6 +287,7 @@
             }
             else {
               var state = localStorage.getItem('posturealarm')
+              console.log(state)
               if (state=="true"){
                   if(recData.flag ==1){//모니터에 다 안담긴 경우
                   var notification = new Notification("[DESK FRIENDS]", { //알람 제목
@@ -276,7 +332,7 @@
         if(localStorage.getItem('startflag')=='0' && localStorage.getItem('justoneflag2')=='0'){//자세 detect 중지
           document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작합니다';
           
-          console.log("close ws....")
+          
           
           localStorage.setItem('flag',"1")
           //flag=1;
@@ -289,6 +345,8 @@
             
           }
           if(ws!=null){
+            console.log("close ws....")
+            wsflag=0
             ws.close();
           }
           
@@ -389,8 +447,7 @@
   <div class="footer">
     <div class="left">
       <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
-      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
-  </div>
+      </div>
     <div class="right">
       <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
     </div>
