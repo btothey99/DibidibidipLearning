@@ -22,11 +22,29 @@
       <h3>시작시간</h3><h4> 이전에 설정된 값:</h4><h4 id="boom"> </h4>
       <input id='timepicker1' type='text'name='timepicker1'/>
       <h3>자세교정</h3>
-      <input id='timepicker2_start' type='text'name='timepicker2_start'/>
-      <h3>~</h3>
-      <input id='timepicker2_end' type='text'name='timepicker2_end'/>
+      <select id="min" class="min-select" name='min'>
+        <option>00</option>
+        <option>05</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+        <option>25</option>
+        <option>30</option>
+        <option>35</option>
+        <option>40</option>
+        <option>45</option>
+        <option>50</option>
+        <option>55</option>
+      </select>
       <h3>알람 주기</h3>
-      <input id='timepicker3' type='text'name='timepicker3'/>
+      <select id="hour" class="hour-select" name='hour'>
+        <option>0시간 30분</option>
+        <option>1시간 00분</option>
+        <option>1시간 30분</option>
+        <option>2시간 00분</option>
+        <option>2시간 30분</option>
+        <option>3시간 00분</option>
+      </select>
       <button type="submit" onclick="onButtonClicked()">설정</button>
     </div>
   </div>
@@ -36,7 +54,6 @@
   <div class="footer">
     <div class="left">
       <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
-      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
   </div>
     <div class="right">
       <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
@@ -108,25 +125,22 @@
 
     function onButtonClicked(){
             var starttime= document.getElementById("timepicker1").value ;
-            var posture_start= document.getElementById("timepicker2_start").value ;
-            var posture_end= document.getElementById("timepicker2_end").value ;
-            var period= document.getElementById("timepicker3").value ;
+            var posture= document.getElementById("min").value ;
+            var period= document.getElementById("hour").value ;
             console.log(starttime)
-            console.log(posture_start)
-            console.log(posture_end)
+            console.log(posture)
             console.log(period)
             starttime=convertTime12to24(starttime)
-            posture_start=convertTime12to24(posture_start)
-            posture_end=convertTime12to24(posture_end)
-            period=convertTime12to24(period)
-
            
+
+            var string=period.split(" ");
+            var periodintodb=parseInt(string[0])+":"+parseInt(string[1])
+            console.log(periodintodb)
             
             let data = {
                 starttime : starttime,
-                posture_start:posture_start,
-                posture_end:posture_end,
-                period:period
+                posture:posture,
+                period:periodintodb
             }
             try{
                 var responsedata =  axios.post('http://localhost:3000/alarm_settingsAf',  JSON.stringify(data), {
@@ -141,8 +155,7 @@
             
             localStorage.setItem('starttime',starttime)
             console.log(localStorage.getItem('starttime'))//확인용
-            localStorage.setItem('posture_start',posture_start)
-            localStorage.setItem('posture_end',posture_end)
+            localStorage.setItem('posture',posture)
             localStorage.setItem('period',period)
     }
       function printTime(){
@@ -152,9 +165,7 @@
 
 
     $('#timepicker1').timepicki();
-    $('#timepicker2_start').timepicki();
-    $('#timepicker2_end').timepicki();
-    $('#timepicker3').timepicki();
+   
   </script>
   <script src="js/bootstrap.min.js"></script>
   </body>
