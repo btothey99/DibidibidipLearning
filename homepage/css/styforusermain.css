@@ -33,13 +33,26 @@ video {
   max-width: 28em;
 }
 
+.disc {
+  float : right;
+}
+
+.disc img {
+  width : 360px;
+  height : 360px;
+}
+
+.disc button {
+  text-align: center;
+}
+
 button {
   flex-grow: 1;
   height: 3.5rem;
   min-width: 2rem;
   border: none;
   border-radius: 0.15rem;
-  background: #ed341d;
+  background: #bdc9a6;
   margin-left: 2px;
   box-shadow: inset 0 -0.15rem 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
@@ -52,22 +65,56 @@ button {
 }
 button:hover, button:focus {
   outline: none;
-  background: #c72d1c;
+  background: #82b8adff;
 }
-button::-moz-focus-inner {
-  border: 0;
+
+.modal_wrap{
+        display: none;
+        width: 500px;
+        height: 600px;
+        position: absolute;
+        top:50%;
+        left: 50%;
+        margin: -375px 0 0 -250px;
+        background:#eee;
+        z-index: 2;
+    }
+    .black_bg{
+    display: none;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0, 0,0, 0.5);
+    top:0;
+    left: 0;
+    z-index: 1;
 }
-button:active {
-  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.2);
-  line-height: 3rem;
+
+.modal_close{
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: -30px;
+    right: 0;
 }
-button:disabled {
-  pointer-events: none;
-  background: lightgray;
+
+
+.modal_close> a{
+        display: block;
+        width: 100%;
+        height: 100%;
+        background:url(https://img.icons8.com/metro/26/000000/close-window.png);
+        text-indent: -9999px;
+    }
+
+.modal_text {
+  text-align: center;
+  padding: 20px;
+  font-family: '서울한강 장체B', sans-serif;
+  font-size : 24px;
 }
-button:first-child {
-  margin-left: 0;
-}
+
 
 .footer {
   width:100%;
