@@ -3,40 +3,61 @@
 <head>
   <meta charset='utf-8'/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel='stylesheet' href='styforusermain.css'/>
+  <link rel='stylesheet' href='./css/styforusermain.css'/>
   <title>Desk Friend</title>
+  <!--jQuery-->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!--Socket.io Client-->
+  <script src="./socket.io-client/dist/socket.io.js"></script>
+  <script src="./socket.io-stream/socket.io-stream.js"></script>
 </head>
 <body>
   <!-- 일시정지 버튼 -->
   <header>
     <div class="pause">
-      <img src="pause.png" id="pause">
+      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">
     </div>
   </header>
+  <div class="disc">
+  <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pngegg.png" id="discript">
+  <!-- Trigger/Open The Modal -->
+  <button type='button' id="modal_btn">바른 자세란?</button>
+<div class="black_bg"></div>
+<div class="modal_wrap">
+  <div class="modal_close"><a href="#">close</a></div>
+  <div class="modal_text">
+    <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/gyojung.png" id="imggj"> <br><br>
+    양쪽 어깨와 얼굴이 화면에 모두 위치하도록 자세를 조정해주세요.<br> 가슴과 어깨를 펴고, 턱을 가볍게 안쪽으로 당겨주세요! <br><br>
+    모니터와 화면 사이의 거리는 40cm 이상으로 두고, <br>눈이 모니터의 2/3지점을 바라보게 해주세요!
+  </div>
+</div>
+</div>
 
-  <!--웹캠 영상 -->
-  <video
-     width="704"
-     height="576"
-     autoplay
-     playsinline
-     muted
-     id="player"
-   ></video> -->    <!-- 이 video tag를 통해 webcam feed를 재생합니다. -->
+<script>
+    window.onload = function() {
 
-   <script type="text/javascript" src="./user_main.js"></script>
+    function onClick() {
+        document.querySelector('.modal_wrap').style.display ='block';
+        document.querySelector('.black_bg').style.display ='block';
+    }
+    function offClick() {
+        document.querySelector('.modal_wrap').style.display ='none';
+        document.querySelector('.black_bg').style.display ='none';
+    }
 
+    document.getElementById('modal_btn').addEventListener('click', onClick);
+    document.querySelector('.modal_close').addEventListener('click', offClick);
 
-
+};
+</script>
 
   <!--하단 설정 메뉴바 -->
   <div class="footer">
     <div class="left">
-      <a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>
+      <a href="alarm_settings.html" target="_blank" title="알람설정"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/alarm.png" id="settings"></a>
   </div>
     <div class="right">
-      <a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
-      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>
+      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/settings.png" id="settings"></a>
     </div>
   </div>
   </body>
