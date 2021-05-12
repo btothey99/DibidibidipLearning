@@ -3,8 +3,8 @@
 <head>
   <meta charset='utf-8'/>
   <link rel='stylesheet' href='styformain.css'/>
-  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/" type="image/x-icon">
-  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/" type="image/x-icon">
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <title>Desk Friend</title>
 </head>
 <body>
@@ -18,7 +18,7 @@
     				</select>
     			</div>
     			<div class="logo-wrap">
-    				<img src="logo.png">
+    				<img src="./img/logo.png">
     			</div>
           <div class="title">
           <h1> 데스크 프렌드 </h1>
@@ -26,6 +26,8 @@
         </div>
     		</header>
     		<section class="login-input-section-wrap">
+          <form name="loginInfo" method="post" action="./pro/LoginPro.jsp"
+                onsubmit="return checkValue()">
     			<div class="login-input-wrap">
     				<input placeholder="Username" type="text"></input>
     			</div>
@@ -35,13 +37,14 @@
     			<div class="login-button-wrap">
     				<button>Sign in</button>
     			</div>
-    			<div class="login-stay-sign-in">
+    			<!--<div class="login-stay-sign-in">
     				<i class="far fa-check-circle"></i>
     				<span>Stay Signed in</span>
     			</div>
+        -->
     		</section>
     		<section class="Easy-sgin-in-wrap">
-    			<p class="forget-msg">Forgot your Username or Password? | Sign up</p>
+    			<p class="forget-msg">Forgot your Username or Password? | <a href="register.html">Sign up</a></p>
     		</section>
     		<footer>
     			<div class="copyright-wrap">
