@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel='stylesheet' href='./css/styforonoff.css'/>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <title>Desk Friend</title>
 </head>
 
@@ -28,7 +30,9 @@
     </div>
 
     <div class="onoff-list">
-      <p3>로그아웃</p3>
+      <a href="/logout"><button>로그아웃</button></a>
+      
+      <!-- <p3>로그아웃</p3> -->
     </div>
     
     <div>
@@ -37,6 +41,12 @@
 </div>
 
 <script>
+
+function onButtonClicked(){
+            var starttime= document.getElementById("logout").value ;
+            
+    }
+      
 
 window.onload = function () {
   localStorage.removeItem("flag");
@@ -108,7 +118,6 @@ window.onload = function () {
   <div class="footer">
     <div class="left">
       <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
-      <a href="/callender" title="캘린더"><img src="./img/user-icon.png" id="settings"></a>
   </div>
     <div class="right">
       <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
