@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <script type='text/javascript'src='js/jquery.js'></script>
+  <script type='text/javascript'src='js/timepicki.js'></script>
+
+  <!-- Custom styles for this template -->
+  <link rel='stylesheet' type='text/css' href='css/styforalse.css'/>
+  <link rel='stylesheet' href='css/timepicki.css'>
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+
+  <title>Desk Friend</title>
+</head>
+<body>
+   
+  <div class="window-wrap">
+    <div class="inner cover indexpicker">
+       
+      <h3>시작시간</h3>
+      <input id='timepicker1' type='text'name='timepicker1'/>
+      <h3>자세교정</h3>
+      <select id="min" class="min-select" name='min'>
+        <option>00</option>
+        <option>05</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+        <option>25</option>
+        <option>30</option>
+        <option>35</option>
+        <option>40</option>
+        <option>45</option>
+        <option>50</option>
+        <option>55</option>
+      </select>
+      <h3>알람 주기</h3>
+      <select id="hour" class="hour-select" name='hour'>
+        <option>0시간 30분</option>
+        <option>1시간 00분</option>
+        <option>1시간 30분</option>
+        <option>2시간 00분</option>
+        <option>2시간 30분</option>
+        <option>3시간 00분</option>
+      </select>
+      <div>
+        <a href="/user_main" onclick="onButtonClicked()"><button>설정</button></a>
+    </div>
+     
+    </div>
+  </div>
+
+
+  <!--하단 설정 메뉴바 -->
+  <div class="footer">
+    <div class="left">
+      <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+  </div>
+    <div class="right">
+      <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
+    </div>
+  </div>
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/timepicki.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    
+    
+    window.onload = function () {
+    console.log(localStorage.getItem('starttime'))
+    if(localStorage.getItem('starttime')!=null){//이 페이지에 처음 들어간 상황이라면
+        document.getElementById("boom").innerText = localStorage.getItem('starttime');
+    }
+    localStorage.removeItem("flag");
+    localStorage.removeItem("startflag");
+    localStorage.removeItem("justoneflag");
+    localStorage.removeItem("justoneflag2");
+    
+  
+        
+  }
+
+  
+  const convertTime12to24 = (time12h) => {
+        const [time, modifier] = time12h.split(' ');
+
+        let [hours, minutes] = time.split(':');
+
+        if (hours === '12') {
+            hours = '00';
+        }
+
+        if (modifier === 'PM') {
+            hours = parseInt(hours, 10) + 12;
+        }
+
+        return `${hours}:${minutes}`;
+    }
+
+    function onButtonClicked(){
+            var starttime= document.getElementById("timepicker1").value ;
+            var posture= document.getElementById("min").value ;
+            var period= document.getElementById("hour").value ;
+            console.log(starttime)
+            console.log(posture)
+            console.log(period)
+            starttime=convertTime12to24(starttime)
+           
+
+            var string=period.split(" ");
+            var periodintodb=parseInt(string[0])+":"+parseInt(string[1])
+            console.log(periodintodb)
+            
+            let data = {
+                starttime : starttime,
+                posture:posture,
+                period:periodintodb
+            }
+            try{
+                var responsedata =  axios.post('https://deskfriend.tk/alarm_settingsAf',  JSON.stringify(data), {
+                headers: {
+                    'Content-Type': `application/json`,
+                }
+                })
+                console.log(responsedata)
+            }catch(e){console.log("[ERROR|success alarm data error] : ",e)}
+
+
+            
+            localStorage.setItem('starttime',starttime)
+            console.log(localStorage.getItem('starttime'))//확인용
+            localStorage.setItem('posture',posture)
+            localStorage.setItem('period',period)
+    }
+      function printTime(){
+          const time = document.getElementById("timepicker1").value;
+          
+      }
+
+
+    $('#timepicker1').timepicki();
+   
+  </script>
+  <script src="js/bootstrap.min.js"></script>
+  </body>
+  </html>
