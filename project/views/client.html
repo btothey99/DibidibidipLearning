@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Client</title>
+</head>
+<body>
+    <img src="">
+    <script>
+        // get img dom element
+        const img = document.querySelector('img');
+        
+        const WS_URL = 'ws://localhost:3000';
+        const ws = new WebSocket(WS_URL);
+        ws.onopen = () => console.log(`Connected to ${WS_URL}`);
+        ws.onmessage= function(event){
+          console.log("server message: ",event.data);
+        }
+    </script>
+</body>
+</html>
