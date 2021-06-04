@@ -30,6 +30,7 @@ https://hayoung1214.blogspot.com/2021/05/blog-post_17.html
 - openpose >> https://github.com/CMU-Perceptual-Computing-Lab/openpose
 
 <h3><b>  깃헙 파일 설명 </b></h3>
+
 algorithm : 알고리즘에서 사용된 코드를 모아놓은 폴더입니다.
 
 homepage : 프론트엔드에서 사용된 코드를 모아놓은 폴더입니다.
