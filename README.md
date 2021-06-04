@@ -12,8 +12,8 @@
 
 <b>기술 블로그</b>
 
--프로젝트에서 사용할 주요 기술에 대해서 알아보고, 웹캠과 opencv 연결하는 실습 진행해보기 >>
-https://archiveeverythingnow.blogspot.com/2020/11/1-colab-opencv.html 
+-custom data로 YOLOv3 train하기
+https://codeandnow.tistory.com/4?category=947730
 
 -웹캠과 opencv 연결해보기 
 >> https://shlfmf.blogspot.com/2020/11/opencvgoogle-colab.html
