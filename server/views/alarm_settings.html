@@ -11,15 +11,17 @@
   <!-- Custom styles for this template -->
   <link rel='stylesheet' type='text/css' href='css/styforalse.css'/>
   <link rel='stylesheet' href='css/timepicki.css'>
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
 
   <title>Desk Friend</title>
 </head>
 <body>
-    <!-- <form action='/alarm_settingsAf' method='post'> -->
+   
   <div class="window-wrap">
     <div class="inner cover indexpicker">
-        <!-- 우선 이케 넣음 -->
-      <h3>시작시간</h3><h4> 이전에 설정된 값:</h4><h4 id="boom"> </h4>
+       
+      <h3>시작시간</h3>
       <input id='timepicker1' type='text'name='timepicker1'/>
       <h3>자세교정</h3>
       <select id="min" class="min-select" name='min'>
@@ -45,10 +47,13 @@
         <option>2시간 30분</option>
         <option>3시간 00분</option>
       </select>
-      <button type="submit" onclick="onButtonClicked()">설정</button>
+      <div>
+        <a href="/user_main" onclick="onButtonClicked()"><button>설정</button></a>
+    </div>
+     
     </div>
   </div>
-<!-- </form> -->
+
 
   <!--하단 설정 메뉴바 -->
   <div class="footer">
@@ -67,16 +72,7 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     
-    // axios.get('http://localhost:3000/alarm_settings')
-    // .then(function(response){ 띄우면 이전에 설정한거 바로 보이는 부분
-    //     console.log(response)
-    // })
-    // .catch(function (error) {
-    //     console.log(error);
-    // })
-    // .then(function(response){
-    //     console.log(response.predata)
-    // })
+    
     window.onload = function () {
     console.log(localStorage.getItem('starttime'))
     if(localStorage.getItem('starttime')!=null){//이 페이지에 처음 들어간 상황이라면
@@ -86,27 +82,12 @@
     localStorage.removeItem("startflag");
     localStorage.removeItem("justoneflag");
     localStorage.removeItem("justoneflag2");
-    // else{
-    //   var state = localStorage.getItem('posturealarm')
-    //   if (state=="true"){
-    //     $("input[id=posture]:checkbox").attr('checked', 'checked');
-    //   }
-    // }
-
     
-    // if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
-    //   localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
-    // }
-    
-    // else{
-    //   var state = localStorage.getItem('webcamalarm')
-    //   if (state=="true"){
-    //     $("input[id=webcam]:checkbox").attr('checked', 'checked');
-    //   }
-    // }
   
         
   }
+
+  
   const convertTime12to24 = (time12h) => {
         const [time, modifier] = time12h.split(' ');
 
@@ -143,7 +124,7 @@
                 period:periodintodb
             }
             try{
-                var responsedata =  axios.post('http://localhost:3000/alarm_settingsAf',  JSON.stringify(data), {
+                var responsedata =  axios.post('https://deskfriend.tk/alarm_settingsAf',  JSON.stringify(data), {
                 headers: {
                     'Content-Type': `application/json`,
                 }
