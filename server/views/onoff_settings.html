@@ -4,7 +4,7 @@
   <meta charset='utf-8'/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel='stylesheet' href='./css/styforonoff.css'/>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
   <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <title>Desk Friend</title>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="onoff-list">
-      <a href="/logout"><button>로그아웃</button></a>
+      <a href="/logout" id="logout"  onclick="onButtonClicked()"><button>로그아웃</button></a>
       
       <!-- <p3>로그아웃</p3> -->
     </div>
@@ -44,15 +44,20 @@
 
 function onButtonClicked(){
             var starttime= document.getElementById("logout").value ;
+            localStorage.removeItem("flag");
+            localStorage.removeItem("startflag");
+            localStorage.removeItem("justoneflag");
+            localStorage.removeItem("justoneflag2");
+
+            localStorage.removeItem('starttime')
+            localStorage.removeItem('posture')
+            localStorage.removeItem('period')
             
     }
       
 
 window.onload = function () {
-  localStorage.removeItem("flag");
-  localStorage.removeItem("startflag");
-  localStorage.removeItem("justoneflag");
-  localStorage.removeItem("justoneflag2");
+
 
     if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
       localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
@@ -85,10 +90,10 @@ window.onload = function () {
   check.click(function(){
   	$("p").toggle();
     
-    //console.log(this.checked)
+    
     if (this.checked ==true){
       localStorage.setItem('posturealarm',"true")
-      console.log(localStorage.getItem('posturealarm'))//확인용
+      console.log(localStorage.getItem('posturealarm'))
     }
     else{
       localStorage.setItem('posturealarm',"false")
@@ -103,7 +108,7 @@ window.onload = function () {
     
     if (this.checked ==true){
       localStorage.setItem('webcamalarm',"true")
-      console.log(localStorage.getItem('webcamalarm'))//확인용
+      console.log(localStorage.getItem('webcamalarm'))
     }
     else{
       localStorage.setItem('webcamalarm',"false")
