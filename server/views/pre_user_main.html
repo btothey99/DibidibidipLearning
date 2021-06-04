@@ -3,32 +3,57 @@
 <head>
   <meta charset='utf-8'/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel='stylesheet' href='styforusermain.css'/>
+  <link rel="stylesheet" type="text/css" href="css/styforusermain.css" />
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <title>Desk Friend</title>
 </head>
 <body>
   
-  <header>
-    <div class="pause">
-      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/pause.png" id="pause">
+  
+
+
+  <div class="disc">
+    <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pngegg.png" id="discript">
+    <!-- Trigger/Open The Modal -->
+    <button type='button' id="modal_btn">바른 자세란?</button>
+  <div class="black_bg"></div>
+  <div class="modal_wrap">
+    <div class="modal_close"><a href="#">close</a></div>
+    <div class="modal_text">
+      <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/gyojung.png" id="imggj"> <br><br>
+      양쪽 어깨와 얼굴이 화면에 모두 위치하도록 자세를 조정해주세요.<br> 가슴과 어깨를 펴고, 턱을 가볍게 안쪽으로 당겨주세요! <br>
+      모니터와 화면 사이의 거리는 40cm 이상으로 두고, <br>눈이 모니터의 2/3지점을 바라보게 해주세요!
     </div>
-  </header>
   </div>
+  </div>
+
   <video autoplay></video>
-     
-  <button onclick="onButtonClicked()">자세 등록하기</button>
+    
+  
+  <button onclick="onButtonClicked()">자세 등록하기</button> 
   <h2 id="boom">버튼을 클릭해 올바른 자세를 등록해주세요</h2>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  
-  
-    <script type="text/javascript">
+  <script type="text/javascript">
     // get video dom element
         const video = document.querySelector('video');
         
 
-        navigator.mediaDevices.getUserMedia({video: {width: 426, height: 240}}).then((stream) => video.srcObject = stream);
-       
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
         window.onload = function () {
+
+          function modonClick() {
+          document.querySelector('.modal_wrap').style.display ='block';
+          document.querySelector('.black_bg').style.display ='block';
+          }
+          function modoffClick() {
+              document.querySelector('.modal_wrap').style.display ='none';
+              document.querySelector('.black_bg').style.display ='none';
+          }
+
+          document.getElementById('modal_btn').addEventListener('click', modonClick);
+          document.querySelector('.modal_close').addEventListener('click', modoffClick);
+
             if (window.Notification) {
                 Notification.requestPermission();
                 //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
@@ -37,6 +62,10 @@
                 localStorage.removeItem("startflag");
                 localStorage.removeItem("justoneflag");
                 localStorage.removeItem("justoneflag2");
+
+                localStorage.removeItem('starttime')
+                localStorage.removeItem('posture')
+                localStorage.removeItem('period')
             }
             
         }
@@ -56,18 +85,17 @@
         let data = {
           id : imagebase64data
         }
-        //imagebase64data = imagebase64data.replace('data:image/jpeg;base64,', '');  
-        console.log("eeeesssseeeeeeeeeee")
+      
         
         async function foo(){
           try{
-            var responsedata =  await axios.post('http://localhost:3000/makefile',  JSON.stringify(data), {
+            var responsedata =  await axios.post('https://deskfriend.tk/makefile',  JSON.stringify(data), {
             headers: {
                 'Content-Type': `application/json`,
               }
             })
             console.log(responsedata)
-            //let recData = JSON.parse(responsedata.data);
+          
             if(responsedata.status == 200){
                     console.log(responsedata.data.text[0])
                     console.log(responsedata.data.flag)
@@ -80,37 +108,47 @@
               
               
             }
-            else if(responsedata.data.flag ==2){  //자세가 안좋은 경우
-              var array=[];
-              
-              for(var i =0; i<responsedata.data.text.length ; i++){
-                array.push(responsedata.data.text[i])
+            
+            else if(responsedata.data.flag ==2){  //어깨 자세가 안좋은 경우
+                  var array=[];
+                  array.push(responsedata.data.text)
                 
-              
-              }
-              
-              document.getElementById("boom").innerText = array+"이(가) 바르지 않습니다 다시 촬영해주세요";
+                  document.getElementById("boom").innerText = array+"이(가) 올라가 있습니다. 다시 촬영해주세요";
+
+                  
+                  
             }
+            else if(responsedata.data.flag ==3){//고개 자세가 안좋은 경우
+
+              var array=[];
+              array.push(responsedata.data.text)
+            
+
+              document.getElementById("boom").innerText = "고개가 "+array+"으로 기울었군요! 다시 촬영해주세요";
+
+
+              }
+                
 
             else if(responsedata.data.flag ==0){  //자세가 좋은 경우
              
-              //document.getElementById("boom").innerText = "올바른 자세 등록중 입니다";
+              
 
               if (Notification.permission !== 'granted') {
                 alert('notification is disabled');
               }
               else {
-                  var notification = new Notification("[DESK FRIENDS]", { //알람 제목
-                      icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                      icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
                       body: "올바른 자세가 등록되어 서비스 페이지로 이동합니다" //알람 내용
                   });
   
                   notification.onclick = function () {
-                      window.open('http://localhost:3000/user_main'); //알람 누르면 우리 홈페이지로 오게
+                      window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
                   };
               }
 
-              window.location.href = 'http://localhost:3000/user_main';
+              window.location.href = 'https://deskfriend.tk/user_main';
             }
             
             
@@ -134,69 +172,10 @@
 
   <!--하단 설정 메뉴바 -->
   <div class="footer">
-    <div class="left">
-      <!--<a href="alarm_settings.html" target="_blank" title="알람설정"><img src="alarm.png" id="settings"><p1>알람설정</p1></a>-->
-      <button type="button" class="navyBtn" onClick="location.href='/alarm_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/alarm.png" id="settings"></button><!--이런식으로 바꾸는거 보연이에게 상의-->
-    </div>
-    <div class="right">
-      <!--<a href="callender.html" target="_blank" title="캘린더"><img src="user-icon.png" id="settings"></a>
-      <a href="onoff_settings.html" target="_blank" title="캘린더"><img src="settings.png" id="settings"></a>-->
-    
-      <button type="button" class="navyBtn" onClick="location.href='/callender'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/user-icon.png" id="settings"></button>
-      <button type="button" class="navyBtn" onClick="location.href='/onoff_settings'"><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/settings.png" id="settings"></button>
-    </div>
+   
   </div>
   </body>
   
   
-<style>
-  html {
-    height: 100%;
-}
 
-body {
-    margin: 0;
-    height: 100%;
-    background: #ffffff;
-    font-family: Dotum,'돋움',Helvetica,sans-serif;
-}
-
-header .pause{
-	display:flex;
-	justify-content:flex-end;
-}
-
-header .pause img {
-  margin: 20px;
-  width: 64px;
-  height: 64px;
-}
-
-.footer {
-  width:100%;
-  height:100px;
-  position:absolute;
-  bottom:0;
-  background: #82b8ad;
-  display:flex;
-  color: white;
-}
-.footer .left {
-    text-align: left;
-}
-.footer .right {
-    text-align: right;
-}
-.footer img {
-  margin: 20px;
-  width: 36px;
-  height: 36px;
-}
-
-.footer p1 {
-  margin: 20px 0px;
-  padding: 20px 0px;
-  color: #000000;
-}
-</style>  
 </html>
