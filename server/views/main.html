@@ -3,21 +3,29 @@
 <head>
   <meta charset='utf-8'/>
   <link rel="stylesheet" type="text/css" href="css/styformain.css" />
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
   <title>Desk Friend</title>
 </head>
 <body>
     <div class="main-container">
     		<div class="main-wrap">
     		<header>
+    			<div class="sel-lang-wrap">
+    				<select class="lang-select">
+    					<option>한국어</option>
+    					<option>English</option>
+    				</select>
+    			</div>
     			<div class="logo-wrap">
-    				<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/homepage/logo.png">
+    				<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png">
     			</div>
           <div class="title">
           <h1> 데스크 프렌드 </h1>
           <p> '올바른 자세와 집중력 향상을 책임져주는, 내 책상 위의 가장 가까운 친구'</p>
         </div>
     		</header>
-			<form action='/main' method='post'>
+			<form action='/main' id="form"  method='post'>
     		<section class="login-input-section-wrap">
     			<div class="login-input-wrap">
     				<input placeholder="Username" id="id" name="id" type="text"></input>
@@ -26,10 +34,10 @@
     				<input placeholder="Password" id="password"   name="password" type="password"></input>
     			</div>
     			<div class="login-button-wrap">
-    				<button type="submit" id="btnJoin">
+    				<button type="submit"  onclick="onButtonClicked()" id="btnJoin">
                         <span>Sign in</span>
                     </button>
-
+					
     			</div>
     			<div class="login-stay-sign-in">
     				<i class="far fa-check-circle"></i>
@@ -37,200 +45,46 @@
 
     			</div>
     		</section>
+
+			<script>
+				const formtag = document.getElementById("form");
+				// 데이터 전송, 페이지 전환 방지
+				function handleSubmit(event) {
+				event.preventDefault()
+				}
+
+				// 등록
+				function init() {
+				formtag.addEventListener('submit', handleSubmit)
+				}
+
+				function onButtonClicked(){
+            		var id= document.getElementById("id").value ;
+					var password= document.getElementById("password").value ;
+					
+					if(id==""){
+						
+						alert('아이디를 입력해주세요');
+					}
+					else if(password==""){
+						alert('비밀번호를 입력해주세요');
+					}
+           
+				}
+			</script>
     		<section class="Easy-sgin-in-wrap">
-
-
+				
+      
     			<p class="forget-msg">Forgot your Username or Password? | <a href="/register"> Sign up</a></p>
     		</section>
     		<footer>
     			<div class="copyright-wrap">
-    			<span><img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/homepage/logo.png"> Copyright © Dibidibidiplearning. All Rights Reserved.</span>
+    			<span>	<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png"> Copyright © Dibidibidiplearning. All Rights Reserved.</span>
     			</div>
     		</footer>
     		</div>
     	</div>
 	</form>
 </body>
-<!--
-<style>
-    :root{
-	--body-background-color: #f5f6f7;
-	--font-color: #4e4e4e;
-	--border-gray-color : #dadada;
-	--naver-green-color: #04c75a;
-	--naver-green-border-color: #06b350;
-  --dskfrd-color1 : #f2dcb3;
-  --dskfrd-color2 : #bdc9a6;
-  --dskfrd-color3 : #82b8ad;
-}
-*{
-	margin:0;
-	padding:0;
-}
-body{
-	background:var(--body-background-color);
-}
-.main-container{
-	width:100%;
-	display:flex;
-	flex-direction:column;
-	align-items:center;
-	margin-top: 21px;
-}
-.main-container .main-wrap{
-	width:768px;
-}
-.main-container .main-wrap .sel-lang-wrap .lang-select
-{
-	width: 96px;
-	height: 30px;
-	color: var(--font-color);
-	border: solid 1px var(--border-gray-color);
-}
-.main-container .main-wrap .logo-wrap{
-	padding-top:55px;
-}
-.main-container .main-wrap .logo-wrap img
-{
-	width: 231px;
-	height: 44px;
-}
-.main-container .main-wrap header .sel-lang-wrap{
-	display:flex;
-	justify-content:flex-end;
-}
-.main-container .main-wrap header .logo-wrap{
-	display:flex;
-	flex-direction: column;
-	align-items: center;
-}
-.main-container .main-wrap header .title h1 {
-  padding-top: 30px;
-  display:flex;
-  font-size: 60px;
-  flex-direction: column;
-  align-items: center;
-}
-.main-container .main-wrap header .title p {
-  display:flex;
-  flex-direction: column;
-  font-size: 15px;
-  align-items: center;
-}
-.login-input-section-wrap{
-	padding-top: 30px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-.login-input-wrap{
-	width: 465px;
-	height :48px;
-	border: solid 1px var(	--border-gray-color );
-	background: white;
-}
-.password-wrap{
-	margin-top: 13px;
-}
-.login-input-wrap input{
-	border: none;
-	width:430px;
-	margin-top: 10px;
-	font-size: 14px;
-	margin-left: 10px;
-	height:30px;
-}
-.login-button-wrap {
-	padding-top: 13px;
-}
-.login-button-wrap button{
-	width: 465px;
-	height :48px;
-	font-size: 18px;
-	background: var(--dskfrd-color3);
-	color: white;
-	border: solid 1px var(--dskfrd-color2);
-}
-.login-stay-sign-in{
-	width: 465px;
-	height: 52px;
-	display: flex;
-	font-size: 15px;
-	color: #4e4e4e;
-	align-items: center;
-	justify-content: flex-start;
-	border-bottom: solid 1px var(--border-gray-color);
-}
-.login-stay-sign-in i{
-	font-size: 25px;
-	color: #9ba1a3;
-}
-.login-stay-sign-in span{
-	padding-left: 5px;
-	line-height: 25px;
-}
-.Easy-sgin-in-wrap{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding-top: 40px;
-}
-.Easy-sgin-in-wrap h2{
-	font-size: 20px;
-}
-.Easy-sgin-in-wrap .sign-button-list
-{
-	padding-top:25px;
-	list-style: none;
-	width: 465px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-.Easy-sgin-in-wrap .sign-button-list li{
-	padding-bottom: 10px;
-}
-.Easy-sgin-in-wrap .sign-button-list li button{
-	width: 465px;
-	height: 56px;
-	border: solid 1px var(--border-gray-color);
-	text-align: left;
-	background: white;
-}
-.Easy-sgin-in-wrap .sign-button-list li button i{
-	padding-left: 15px;
-	font-size: 20px;
-}
-.Easy-sgin-in-wrap .sign-button-list li button span{
-	padding-left: 20px;
-	font-size: 18px;
-}
-.Easy-sgin-in-wrap .forget-msg{
-	color:var(--font-color);
-	font-size: 14px;
-	padding-top: 10px;
-}
-footer{
-	padding-top: 95px;
-	padding-bottom: 15px;
-	display:flex;
-	flex-direction:column;
-	align-items:center;
-	width:768px;
-}
-.copyright-wrap{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 15px;
-}
-footer .copyright-wrap span img{
-	width: 59px;
-	height: 11px;
-}
-footer .copyright-wrap span{
-	font-size: 13px;
-	line-height: 15px;
-}
-</style>
-</html> -->
+
+</html> 
