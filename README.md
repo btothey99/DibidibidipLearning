@@ -20,7 +20,7 @@ https://codeandnow.tistory.com/4?category=947730
 -웹캠과 opencv 연결해보기 
 >> https://shlfmf.blogspot.com/2020/11/opencvgoogle-colab.html
 
-- 벡엔드 통합버전 
+-벡엔드 통합버전 
 https://hayoung1214.blogspot.com/2021/05/blog-post_17.html
 
 
