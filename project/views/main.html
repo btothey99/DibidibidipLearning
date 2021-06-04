@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <link rel="stylesheet" type="text/css" href="css/styformain.css" />
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <title>Desk Friend</title>
+</head>
+<body>
+    <div class="main-container">
+    		<div class="main-wrap">
+    		<header>
+    			<div class="sel-lang-wrap">
+    				<select class="lang-select">
+    					<option>한국어</option>
+    					<option>English</option>
+    				</select>
+    			</div>
+    			<div class="logo-wrap">
+    				<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png">
+    			</div>
+          <div class="title">
+          <h1> 데스크 프렌드 </h1>
+          <p> '올바른 자세와 집중력 향상을 책임져주는, 내 책상 위의 가장 가까운 친구'</p>
+        </div>
+    		</header>
+			<form action='/main' id="form"  method='post'>
+    		<section class="login-input-section-wrap">
+    			<div class="login-input-wrap">
+    				<input placeholder="Username" id="id" name="id" type="text"></input>
+    			</div>
+    			<div class="login-input-wrap password-wrap">
+    				<input placeholder="Password" id="password"   name="password" type="password"></input>
+    			</div>
+    			<div class="login-button-wrap">
+    				<button type="submit"  onclick="onButtonClicked()" id="btnJoin">
+                        <span>Sign in</span>
+                    </button>
+					
+    			</div>
+    			<div class="login-stay-sign-in">
+    				<i class="far fa-check-circle"></i>
+    				<span>Stay Signed in</span>
+
+    			</div>
+    		</section>
+
+			<script>
+				const formtag = document.getElementById("form");
+				// 데이터 전송, 페이지 전환 방지
+				function handleSubmit(event) {
+				event.preventDefault()
+				}
+
+				// 등록
+				function init() {
+				formtag.addEventListener('submit', handleSubmit)
+				}
+
+				function onButtonClicked(){
+            		var id= document.getElementById("id").value ;
+					var password= document.getElementById("password").value ;
+					
+					if(id==""){
+						
+						alert('아이디를 입력해주세요');
+					}
+					else if(password==""){
+						alert('비밀번호를 입력해주세요');
+					}
+           
+				}
+			</script>
+    		<section class="Easy-sgin-in-wrap">
+				
+      
+    			<p class="forget-msg">Forgot your Username or Password? | <a href="/register"> Sign up</a></p>
+    		</section>
+    		<footer>
+    			<div class="copyright-wrap">
+    			<span>	<img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png"> Copyright © Dibidibidiplearning. All Rights Reserved.</span>
+    			</div>
+    		</footer>
+    		</div>
+    	</div>
+	</form>
+</body>
+
+</html> 
