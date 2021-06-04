@@ -8,7 +8,7 @@ const preaxiosRequest = async (filePath)=>{
   
   console.log(formData)
   try{
-    var response = await axios.create({headers: formData.getHeaders()}).post("http://b11e9442334d.ngrok.io/Predict/prepare", formData)
+    var response = await axios.create({headers: formData.getHeaders()}).post(".../Predict/prepare", formData)
    
     return response
   } catch(e){
