@@ -15,13 +15,16 @@
 <h3><b>기술 블로그</b></h3>
 
 -custom data로 YOLOv3 train하기
-https://codeandnow.tistory.com/4?category=947730
+>> https://codeandnow.tistory.com/4?category=947730
 
 -웹캠과 opencv 연결해보기 
 >> https://shlfmf.blogspot.com/2020/11/opencvgoogle-colab.html
 
 -벡엔드 통합버전 
-https://hayoung1214.blogspot.com/2021/05/blog-post_17.html
+>> https://hayoung1214.blogspot.com/2021/05/blog-post_17.html
+
+-프론트 모달 팝업창 구현
+>> https://dduck2ddack2.tistory.com/2
 
 
 <h3><b>  구현 참고자료 </b></h3>
