@@ -1,0 +1,154 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background: #ffffff;
+    font-family: Dotum,'돋움',Helvetica,sans-serif;
+}
+
+header .pause{
+	display:flex;
+	justify-content:flex-end;
+}
+
+header .pause img {
+  margin: 20px;
+  width: 64px;
+  height: 64px;
+}
+
+video {
+  float:left;
+  background: #222;
+  margin: 10px auto;
+  width: 800px;
+  height: 600px;
+ 
+}
+
+header .pause .pause_image img {
+  float:left;
+  
+  width: 120px;
+  height: 120px;
+}
+
+
+#controls {
+  display: flex;
+  margin-top: 2rem;
+  max-width: 28em;
+}
+
+.disc {
+  float : right;
+}
+
+.disc img {
+  width : 360px;
+  height : 360px;
+}
+
+.disc button {
+  text-align: center;
+}
+
+button {
+  flex-grow: 1;
+  height: 3.5rem;
+  min-width: 2rem;
+  border: none;
+  border-radius: 0.15rem;
+  background: #bdc9a6;
+  margin-left: 2px;
+  box-shadow: inset 0 -0.15rem 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:#ffffff;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+button:hover, button:focus {
+  outline: none;
+  background: #82b8adff;
+}
+
+.modal_wrap{
+        display: none;
+        width: 500px;
+        height: 600px;
+        position: absolute;
+        top:50%;
+        left: 50%;
+        margin: -375px 0 0 -250px;
+        background:#eee;
+        z-index: 2;
+    }
+    .black_bg{
+    display: none;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0, 0,0, 0.5);
+    top:0;
+    left: 0;
+    z-index: 1;
+}
+
+.modal_close{
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: -30px;
+    right: 0;
+}
+
+
+.modal_close> a{
+        display: block;
+        width: 100%;
+        height: 100%;
+        background:url(https://img.icons8.com/metro/26/000000/close-window.png);
+        text-indent: -9999px;
+    }
+
+.modal_text {
+  text-align: center;
+  padding: 20px;
+  font-family: '서울한강 장체B', sans-serif;
+  font-size : 20px;
+}
+
+
+.footer {
+  width:100%;
+  height:100px;
+  position:absolute;
+  bottom:0;
+  background: #82b8ad;
+  display:flex;
+  color: white;
+}
+.footer .left {
+    text-align: left;
+}
+.footer .right {
+    text-align: right;
+}
+.footer img {
+  margin: 20px;
+  width: 36px;
+  height: 36px;
+}
+
+.footer p1 {
+  margin: 20px 0px;
+  padding: 20px 0px;
+  color: #000000;
+}
