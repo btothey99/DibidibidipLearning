@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="css/styforusermain.css" />
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png" type="image/x-icon">
+  <title>Desk Friend</title>
+</head>
+<body>
+<header>
+  
+  <div class="pause">
+    <div class ="pause_image">
+      <img src=""  onerror="this.style.visibility='hidden'" alt=''  id="videoimage">
+    </div>
+    <h2 id="sentence"></h2>
+   
+   <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/play.png" id="play">
+    
+  </div>
+</header>
+
+<div class="disc">
+  <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pngegg.png" id="discript">
+  <!-- Trigger/Open The Modal -->
+  <button type='button' id="modal_btn">바른 자세란?</button>
+<div class="black_bg"></div>
+<div class="modal_wrap">
+  <div class="modal_close"><a href="#">close</a></div>
+  <div class="modal_text">
+    <img src="https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/gyojung.png" id="imggj"> <br><br>
+    양쪽 어깨와 얼굴이 화면에 모두 위치하도록 자세를 조정해주세요.<br> 가슴과 어깨를 펴고, 턱을 가볍게 안쪽으로 당겨주세요! <br>
+    모니터와 화면 사이의 거리는 40cm 이상으로 두고, <br>눈이 모니터의 2/3지점을 바라보게 해주세요!
+  </div>
+</div>
+</div>
+
+
+<video autoplay></video>
+
+
+    <script type="text/javascript" src='js/TimeInfo.js'></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+    
+      console.log("flag: ",localStorage.getItem('flag'))
+      console.log("startflag: ",localStorage.getItem('startflag'))
+      console.log("justoneflag: ",localStorage.getItem('justoneflag'))
+      console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
+      
+     
+            
+      document.getElementById('play').addEventListener('click', onClick); // 이벤트 연결
+      // get video dom element
+      const video = document.querySelector('video');
+      
+      const WS_URL = 'wss://deskfriend.tk';
+      const FPS = 1;
+      var ws;
+     
+     
+      document.getElementById("sentence").innerText = '재생버튼을 클릭해 서비스를 시작해주세요';
+     
+      
+        function getFrame() {
+        
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+        
+            const data = canvas.toDataURL('image/jpeg');
+        
+            return data;
+        }
+
+  
+    
+
+      var starttime = localStorage.getItem('starttime');
+      var posture = localStorage.getItem('posture')
+      var period = localStorage.getItem('period')
+      var wsflag=0;
+      var trueflag=0;  
+      var string_end_m=parseInt(posture)*60;//분을 초로 <1분>
+      
+      console.log(string_end_m)
+     
+      console.log(".......period.........")
+      if(localStorage.getItem("period")!=null){
+        var string=period.split(" ");
+        console.log(string[0])
+        console.log(string[1])
+        var string_h=(parseInt(string[0])%12)*3600;//시를 초로
+        var string_m=parseInt(string[1])*60;//분을 초로 <2분>
+        console.log(string_h)
+        console.log(string_m) 
+
+        console.log("................")
+        console.log(string_h*1000+ string_m*1000-string_end_m*1000) //1분
+
+      }
+      
+      function getTime() { //현재시간 반환함수
+        
+        const now=new Date();
+        const hour=now.getHours();//
+        const minute =now.getMinutes();
+        var currTime;
+        if (minute<10){
+          currTime=hour+":0"+minute;
+        }
+        else{
+          currTime=hour+":"+minute;
+        }
+       
+        console.log(currTime);
+        if(currTime==starttime){//설정한 시작 시간이 되면 
+
+         
+          localStorage.setItem('startflag',"1")
+         
+          turnstate_on();
+        
+          localStorage.setItem('justoneflag',"1")
+          localStorage.setItem('justoneflag2',"0")
+          
+          console.log("aaa");
+          clearInterval(checkTime)
+          setTimeout(function(){
+              localStorage.setItem('startflag',"0")
+              turnstate_off();
+              localStorage.setItem('justoneflag2',"1")
+              localStorage.setItem('justoneflag',"0")
+            
+              console.log("it's end time///////////////")
+
+              setTimeout(function(){
+                  console.log("it's check time!!!!")
+                  var state = localStorage.getItem('posturealarm')
+                  if (state=="true"){
+                    var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                        icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                        body: '바른 자세를 유지하고 있나요?', //알람 내용
+                      });
+
+                        notification.onclick = function () {
+                          window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                        };
+                  }
+       
+                },(string_h*1000+string_m*1000-string_end_m*1000)/3);
+
+              var checkperiod= setInterval (function() {
+
+               
+                console.log('Interval 2000');
+                localStorage.setItem('startflag',"1")
+                
+                turnstate_on();
+                console.log('setInterval turnstate_on////////////');
+                localStorage.setItem('justoneflag',"1")
+                localStorage.setItem('justoneflag2',"0")
+
+                setTimeout(function(){
+                  localStorage.setItem('startflag',"0")
+                  turnstate_off();
+                  console.log('setTimeout turnstate_off');
+                  localStorage.setItem('justoneflag2',"1")
+                  localStorage.setItem('justoneflag',"0")
+                  
+                  console.log("it's period end time")
+                },string_end_m*1000);//string_end_m*1000
+
+                 setTimeout(function(){
+                  console.log("!!!it's check time!!!!")
+                  var state = localStorage.getItem('posturealarm')
+                  if (state=="true"){
+                    var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                        icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                        body: '바른 자세를 유지하고 있나요?', //알람 내용
+                      });
+
+                        notification.onclick = function () {
+                          window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                        };
+                  }
+       
+                },string_end_m*1000 + (string_h*1000+string_m*1000-string_end_m*1000)/3);
+
+
+              },string_m*1000);//string_h*1000+string_m*1000, 또는 string_m*1000-string_end_m*1000>>30000
+          },string_end_m*1000);//string_end_m*1000>>10000
+            
+
+            
+        }
+        
+        console.log("flag: ",localStorage.getItem('flag'))
+        console.log("startflag: ",localStorage.getItem('startflag'))
+        console.log("justoneflag: ",localStorage.getItem('justoneflag'))
+        console.log("justoneflag2: ",localStorage.getItem('justoneflag2'))
+      }
+       
+       //console.log(startflag);
+
+      var checkTime= setInterval (function() {//1초 간격으로 getTime() 메소드 호출
+         
+           getTime()
+         
+      },1000);
+  
+
+      
+
+      function turnstate_on(){
+        if(localStorage.getItem('flag')=='1' && localStorage.getItem('startflag')=='1' && localStorage.getItem('justoneflag')=='0' ){//자세 detect
+          console.log("turn on");
+          var state = localStorage.getItem('webcamalarm')
+          document.getElementById("sentence").innerText = '자세 분석 중입니다....';
+          document.getElementById("videoimage").src = "";
+          document.getElementById("videoimage").style.visibility='hidden'
+ 
+          wsflag=1
+            if (state=="true"){
+              var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                  icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                  body: '웹캠이 켜집니다', //알람 내용
+                });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+            }
+       
+          // request access to webcam
+          navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => video.srcObject = stream);
+       
+          ws =  new WebSocket(WS_URL);
+
+          console.log("ws:" ,ws);
+          ws.onopen = function() {
+              
+              console.log(`Connected to ${WS_URL}`);
+              var temp= setInterval (function() {
+                if(wsflag==0){
+                  clearInterval(temp);
+
+                }
+                  ws.send(getFrame());
+              }, 11000 / FPS);
+          }
+          ws.onclose=()=>{
+            ws.close();
+            wsflag=0
+            console.log(`ws.onclose`);
+          }
+
+          ws.onmessage= function(event){
+            console.log("server message: ",event.data);
+            let recData = JSON.parse(event.data);
+            console.log("flag message: ",recData.flag);
+            var data=[];
+
+
+            if (Notification.permission !== 'granted') {
+                  alert('notification is disabled');
+            }
+            else {
+              var state = localStorage.getItem('posturealarm')
+              console.log(state)
+              if (state=="true"){
+                  if(recData.flag ==1){//모니터에 다 안담긴 경우
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                  icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                  body: '모니터에 어깨와 얼굴이 다 나오도록 자세를 바르게 해주세요', //알람 내용
+                });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                }
+                else if(recData.flag ==5){  //손 검출
+                  
+                
+                  data.push(recData.text)
+                  
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                    icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                    body: "턱을 괴고 있네요! \n자세를 바르게 해주세요", //알람 내용
+                  });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                  trueflag=0;
+                }
+
+                else if(recData.flag ==2){  //어깨 자세가 안좋은 경우
+                  
+                  
+                  data.push(recData.text)
+                  
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                    icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                    body: data + "가 올라가있습니다! 자세를 바르게 해주세요", //알람 내용
+                  });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                  trueflag=0;
+                }
+                else if(recData.flag ==3){//고개 자세가 안좋은 경우
+
+
+                  data.push(recData.text)
+                  
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                    icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                    body: "고개가 "+data+"으로 기울었군요! 자세를 바르게 해주세요", //알람 내용
+                  });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                  trueflag=0;
+                }
+                else if(recData.flag ==4){//거북목
+
+                  data.push(recData.text)
+                  
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                    icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                    body: "거북목 위험 자세입니다! 고개를 턱 쪽으로 당기고 허리를 펴주세요", //알람 내용
+                  });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                  trueflag=0;
+
+                }
+
+                else if(recData.flag ==0 && trueflag==0){//바른자세인 경우
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                  icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                  body: '바른 자세입니다! 이 자세를 유지해주세요!', //알람 내용
+                });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+
+                  trueflag=1;
+                }
+
+                else if(recData.flag ==undefined){
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                  icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                  body: '사용자의 모습이 보이지 않습니다.  ', //알람 내용
+                });
+
+                  notification.onclick = function () {
+                    window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                  };
+                  
+
+                }
+              }
+              }
+            }
+
+        }
+      }
+
+      function turnstate_off(){
+        if(localStorage.getItem('startflag')=='0' && localStorage.getItem('justoneflag2')=='0'){//자세 detect 중지
+          document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작됩니다';
+          
+          
+          
+          localStorage.setItem('flag',"1")
+          //flag=1;
+          if(video!=""){
+            video.pause();
+            video.srcObject.getTracks()[0].stop();
+            video.src = "";//웹캠꺼진거 표시할 수 있는 이미지면 좋겠음
+            
+            
+            
+          }
+          document.getElementById("videoimage").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pozy.jpg";
+          document.getElementById("videoimage").style.visibility='visible'
+          if(ws!=null){
+            console.log("close ws....")
+            wsflag=0
+            ws.close();
+          }
+          
+        }
+      };
+        
+      function onClick() {
+         
+         if(localStorage.getItem('flag')=='0'){//flag가 0인 상태에서 버튼을 클릭했다면
+          if(localStorage.getItem('startflag')==null||localStorage.getItem('posture')==null||localStorage.getItem('period')==null){
+            alert('먼저 알람을 설정해주세요.');
+          }
+          else{
+            alert('서비스 사용을 시작합니다.');
+           document.getElementById("sentence").innerText = '설정한 시각이 되면 웹캠 서비스가 자동으로 시작됩니다';
+           document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pause.png";
+           document.getElementById("videoimage").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pozy.jpg";
+           document.getElementById("videoimage").style.visibility='visible'
+           localStorage.setItem('flag',"1"); //재생상태로 변환
+          
+            
+            const now=new Date();
+            const hour=now.getHours();
+            const minute =now.getMinutes();
+            var currTime;
+            if (minute<10){
+              currTime=hour+":0"+minute;
+            }
+            else{
+              currTime=hour+":"+minute;
+            }
+           
+            console.log(currTime);
+            if(currTime>=starttime){//starttime이 지났다면 
+              console.log("currTime>starttime")
+              
+              localStorage.setItem('startflag','1');
+              localStorage.setItem('justoneflag','0') ;
+          
+              var checkperiod= setInterval (function() {
+
+                            
+              console.log('Interval 2000');
+              localStorage.setItem('startflag',"1")
+              //startflag=1;
+              turnstate_on();
+              console.log('setInterval turnstate_on////////////');
+              localStorage.setItem('justoneflag',"1")
+              localStorage.setItem('justoneflag2',"0")
+
+              setTimeout(function(){
+                localStorage.setItem('startflag',"0")
+                turnstate_off();
+                console.log('setTimeout turnstate_off');
+                localStorage.setItem('justoneflag2',"1")
+                localStorage.setItem('justoneflag',"0")
+                //justoneflag2=1;
+                console.log("it's period end time")
+              },string_end_m*1000);//string_end_m*1000
+
+              setTimeout(function(){
+                console.log("!!!it's check time!!!!")
+                var state = localStorage.getItem('posturealarm')
+                if (state=="true"){
+                  var notification = new Notification("[DESK FRIEND]", { //알람 제목
+                      icon: 'https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/logo.png',
+                      body: '바른 자세를 유지하고 있나요?', //알람 내용
+                    });
+
+                      notification.onclick = function () {
+                        window.open('https://deskfriend.tk/user_main'); //알람 누르면 우리 홈페이지로 오게
+                      };
+                }
+
+              },string_end_m*1000 + (string_h*1000+string_m*1000-string_end_m*1000)/3);
+
+
+              },string_m*1000);//string_h*1000+string_m*1000, 또는 string_m*1000-string_end_m*1000>>30000  string_m*1000
+
+              }
+          }
+           
+                        
+            }
+         else if(localStorage.getItem('flag')=='1'){//flag가 1인 상태에서 버튼을 클릭했다면
+           alert('서비스 사용이 일시 중지 되었습니다.');
+           document.getElementById("sentence").innerText = '재생 버튼을 클릭해 서비스를 재개해주세요';
+           document.getElementById("play").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/play.png";
+           
+           localStorage.setItem('flag',"0"); //일시정지 변환
+           localStorage.setItem('startflag',"0");
+           document.getElementById("videoimage").src = "https://raw.githubusercontent.com/btothey99/DibidibidipLearning/master/homepage/img/pausechar2.jpg";
+            document.getElementById("videoimage").style.visibility='visible'
+           if(video!=""){
+            video.pause();
+            video.srcObject.getTracks()[0].stop();
+            video.src = "";//웹캠꺼진거 표시할 수 있는 이미지면 좋겠음
+            
+            
+            
+          }
+          
+          
+          if(ws!=null){
+            ws.close();
+          }
+         }
+      }
+      
+      window.onload = function () {
+
+        function modonClick() {
+        document.querySelector('.modal_wrap').style.display ='block';
+        document.querySelector('.black_bg').style.display ='block';
+        }
+        function modoffClick() {
+            document.querySelector('.modal_wrap').style.display ='none';
+            document.querySelector('.black_bg').style.display ='none';
+        }
+
+        document.getElementById('modal_btn').addEventListener('click', modonClick);
+        document.querySelector('.modal_close').addEventListener('click', modoffClick);
+
+                 
+                localStorage.setItem('flag',"0") //false로 우선 셋팅
+               
+               localStorage.setItem('startflag',"2") //false로 우선 셋팅
+               
+               localStorage.setItem('justoneflag',"0") //false로 우선 셋팅
+             
+               localStorage.setItem('justoneflag2',"0") //false로 우선 셋팅
+
+
+            if (window.Notification) {
+                Notification.requestPermission();
+                //calculate();여기다 두면 버튼 없이 window로드 될때마다 실행됨
+                
+            }
+            if(localStorage.getItem('posturealarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('posturealarm',"false") //false로 우선 셋팅
+            }
+            if(localStorage.getItem('webcamalarm')==null){//이 페이지에 처음 들어간 상황이라면
+              localStorage.setItem('webcamalarm',"false") //false로 우선 셋팅
+            }
+            
+            checkTime;
+
+            
+        }
+        </script>
+        
+   
+    
+
+
+
+  <!--하단 설정 메뉴바 -->
+  <div class="footer">
+    <div class="left">
+      <a href="/alarm_settings" title="알람설정"><img src="./img/alarm.png" id="settings"></a>
+      </div>
+    <div class="right">
+      <a href="/onoff_settings" title="설정"><img src="./img/settings.png" id="settings"></a>
+    </div>
+  </div>
+  </body>
+  
+
+</html>
