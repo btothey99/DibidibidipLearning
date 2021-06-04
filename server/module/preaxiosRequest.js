@@ -4,10 +4,6 @@ const axios = require('axios')
 const fs = require('fs')
 const preaxiosRequest = async (filePath)=>{
   var newFile = fs.createReadStream(filePath);
-  //console.log('=================')
-  //console.log(filePath)
-  //console.log('==========!!!!!!=======')
-  //console.log(newFile)
   const formData = new FormData();
   formData.append("file", newFile, newFile.name);
   
