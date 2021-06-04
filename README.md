@@ -31,9 +31,13 @@ https://hayoung1214.blogspot.com/2021/05/blog-post_17.html
 
 <h3><b>  깃헙 파일 설명 </b></h3>
 algorithm : 알고리즘에서 사용된 코드를 모아놓은 폴더입니다.
+
 homepage : 프론트엔드에서 사용된 코드를 모아놓은 폴더입니다.
+
 server : 벡엔드에서 사용된 코드를 모아놓은 폴더입니다. (프론트엔드와 중복된 부분 있음)
+
 project : 프론트엔드와 벡엔드의 코드를 합친 폴더입니다.
+
 flask_nodejs_연결.ipynb : colab에서 flask 서버 운영을 위해 사용되는 코드입니다. 
 
 <b> License 표시 (GPL/MIT 등) </b>
